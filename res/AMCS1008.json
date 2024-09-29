@@ -1,0 +1,98 @@
+{
+  "year": "2024",
+  "code": "AMCS1008",
+  "title": "From Landscapes to Mixtapes: Canadian Literature, Film and Culture",
+  "credits": 20.0,
+  "level": 1.0,
+  "summary": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\n<p><span style=\"color:black;\"><span style=\"font-family:arial,sans-serif;\">This module offers an introduction to Canadian literature, film and other cultural forms in relation to key historical and cultural developments. While some reference will be made to earlier periods, the focus will be predominantly on the second half of the twentieth century. Particular attention will be devoted to confronting problems of diverse and diverging identities within Canada. Topics for discussion will include constructions of the wilderness, Qu\u00e9bec nationalism, Indigenous culture, multiculturalism, Canada-US border studies, and Canadian popular culture.</span></span></p><p>Students who fail the participation component will be required to submit a written assignment of 1000 words that engages with the primary texts discussed in the missed seminars.&nbsp;&nbsp;</p><p>&nbsp;</p>\n<!-- End HTML Area -->\n</div>\n",
+  "aims": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\nFor students pursuing the Single Honours American and Canadian Literature, History and Culture degree, this module is a core designed to complement the Department\u2019s other core modules, offering a foundation for more specialized work in Canadian topics later in the degree. This module aims to be inter- and multidisciplinary, although the emphasis remains on a range of cultural texts in relation to historical context.The module offers an introduction to Canadian cultural studies through an examination of selected literary, film and visual texts. These cultural texts will be situated in their appropriate historical, political, regional and national contexts.\n<!-- End HTML Area -->\n</div>\n",
+  "offering": "American and Canadian Studies",
+  "convenor": [
+    {
+      "name": "Dr Susan Elizabeth Billingham"
+    }
+  ],
+  "semester": "Full Year UK",
+  "requisites": [],
+  "additionalRequirements": [
+    {
+      "operator": "(",
+      "condition": "Only available for students studying American and Canadian Studies UG Single and Joint Honours Plans"
+    },
+    {
+      "operator": "OR",
+      "condition": "Only available for students studying Liberal Arts"
+    },
+    {
+      "operator": "AND )",
+      "condition": "Only available for UNUK/Level '01' students"
+    }
+  ],
+  "outcome": "\n<p>On completion of the module, students should have a deeper understanding of a range of Canadian cultural materials, and an increased ability to interpret these materials in their artistic, social and political contexts. Students should attain a greater ability to analyse and explain works and concepts from diverse disciplines and media in relation to each other.</p><ul>\t<li>Knowledge &amp; Understanding:</li>\t<li>Expansion of students\u2019 understanding of \u2018American\u2019 Studies;</li>\t<li>Development of historical, political, and cultural knowledge of Canada<!--[if gte mso 9]><xml> <o:OfficeDocumentSettings>  <o:AllowPNG/> </o:OfficeDocumentSettings></xml><![endif]--></li></ul><p>Intellectual Skills:</p><ul>\t<li>Development of interdisciplinary learning through attention to Canadian history, cultural policy, literature, film, television, and visual art;</li>\t<li>Improvement of interpretative skills of literary, cinematic, televisual and artistic texts;</li>\t<li>Encouragement of independent critical thinking</li></ul><p>Transferable Skills:</p><ul>\t<li>Improvement of ability to communicate effectively and professionally in writing;</li>\t<li>Improvement of verbal expression and professional communication through seminar discussion;</li>\t<li>Encouragement of the ability to take responsibility for and manage one's time, resources and research</li></ul>",
+  "targetStudents": "Available to Year 1 SH and JH American and Canadian Studies students and Liberal Arts students.",
+  "assessmentPeriod": "Assessed in both autumn & spring semest",
+  "courseWebLinks": [],
+  "class": [
+    {
+      "activity": "Seminar",
+      "numOfWeeks": "23  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "1 hour"
+    },
+    {
+      "activity": "Screening",
+      "numOfWeeks": "4  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "2 hours"
+    },
+    {
+      "activity": "Lecture",
+      "numOfWeeks": "23  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "1 hour"
+    }
+  ],
+  "assessment": [
+    {
+      "assessment": "Coursework 1",
+      "weight": "15.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Coursework 1 - Close textual analysis - 750 words"
+    },
+    {
+      "assessment": "Coursework 2",
+      "weight": "25.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Coursework 2 - Essay 1,100 - 1,250 words"
+    },
+    {
+      "assessment": "Coursework 3",
+      "weight": "15.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Coursework 3 - Critical analysis - 750 words"
+    },
+    {
+      "assessment": "Coursework 4",
+      "weight": "25.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Coursework 4 - Essay 1,250 - 1,500 words"
+    },
+    {
+      "assessment": "Participation",
+      "weight": "20.00",
+      "type": "Participation",
+      "duration": "",
+      "requirements": "Participation - (split equally - 10% in semester 1 and 10% in semester 2)"
+    }
+  ],
+  "belongsTo": {
+    "code": "UDD-ACS",
+    "name": "American and Canadian Studies"
+  },
+  "corequisites": [],
+  "classComment": "The School of Cultures, Languages and Area Studies operates an attendance policy. The details of this policy can be found in the student handbook on Workspace and in module handbooks."
+}

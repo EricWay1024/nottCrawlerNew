@@ -1,0 +1,89 @@
+{
+  "year": "2024",
+  "code": "AMCS3069",
+  "title": "American Magazine Culture: Journalism, Advertising and Fiction from Independence to the Internet Age",
+  "credits": 20.0,
+  "level": 3.0,
+  "summary": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\n<p>The magazine has been one of the most accessible and one of the most influential cultural forms in America since the mid-18th century. From the wide-ranging political and literary magazines of this founding period through the emergence of specialized and mass-market periodicals in the 19th century to the counter-cultural and consumerist magazines of the 20th century this distinctive mode of publication has reflected the tensions and ideals of a rapidly developing society. Using a broad range of representative magazines from different eras this module will encourage students to get to grips with how American culture has shaped, and been shaped by, the periodical, and it will also introduce them to some of the unique literary and institutional qualities of the magazine. Primary sources covered on this module are likely to include The Dial (est. 1840), Harper's (est. 1850), The New Yorker (est. 1925), Life (est. 1936) and Rolling Stone (est. 1967). Looked at in the context of their times such sources show us how Americans have long engaged with and debated their own identity through the prism of print, as well as the ways in which this self-definition has changed across time. Moreover, alongside the magazine's regular testing of new political and cultural concepts we will be able to see how the periodical form itself embraced other emerging media: illustration, photography, popular music etc.<br>The main content-spine through each week will be a focus on changes in the nature of American journalism, the rise of modern advertising, and the development of the short story as a form, as well as the interactions between these three elements. In addition to the standard lecture/seminar set-up the module will also incorporate a series of workshops focusing on hands-on study of hard copies of particular publications.</p>\n<!-- End HTML Area -->\n</div>\n",
+  "aims": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\nto introduce students to various aspects of/issues in American culture between 1750 and 2010;to examine a variety of different cultural forms (fiction, photography, essay, art, etc.) in context and through the lens of the magazine;to encourage the application historically and theoretically informed approaches to the study of individual periodicals;to develop a broad understanding of the political, cultural and intellectual functions of the magazine, and its distinctive formal qualities.\n<!-- End HTML Area -->\n</div>\n",
+  "offering": "American and Canadian Studies",
+  "convenor": [
+    {
+      "name": "Dr Matthew James Pethers"
+    }
+  ],
+  "semester": "Autumn UK",
+  "requisites": [],
+  "additionalRequirements": [
+    {
+      "operator": "(",
+      "condition": "Only available for students studying American and Canadian Studies UG Single and Joint Honours Plans"
+    },
+    {
+      "operator": "AND )",
+      "condition": "Only available for Year 3 OR 4 students"
+    },
+    {
+      "operator": "OR",
+      "condition": "Only available for students studying CLAS hosted No Qual plans"
+    },
+    {
+      "operator": "OR",
+      "condition": "Only available for students studying Liberal Arts"
+    }
+  ],
+  "outcome": "\n<p>Knowledge and understanding of key texts and ideas;</p><ul>\t<li>close analysis of primary source texts; knowledge and interpretation of historical contexts;</li>\t<li>engagement with overarching themes in American social and political thought;</li>\t<li>development of arguments and interpretations (both through oral contributions to seminars and written work in essays and the exam).</li></ul><p>Knowledge and understanding:</p><ol>\t<li>On completion of the module students should be able to:</li>\t<li>understand and apply different critical approaches to representations of American society across a broad time-span;</li>\t<li>explain and interpret the historical and cultural factors that bear upon different images and texts;</li>\t<li>approach intellectual questions in an interdisciplinary fashion;</li>\t<li>develop a clearer understanding of the transatlantic context for American culture;</li>\t<li>demonstrate the ability to carry out research and to independently evaluate materials;</li>\t<li>demonstrate the ability to make connections between this module and their larger understanding of American thought and culture;</li>\t<li>construct clear, coherent and independent arguments on the page and in seminar.</li></ol><p>Intellectual skills:</p><ul>\t<li>Students will develop skills in close reading and analysis;</li>\t<li>contextualization and identification of key themes;</li>\t<li>the ability to present and refine their interpretations and arguments in both oral and written form (in seminars, the essay and the exam).</li>\t<li>In their efforts to think about the ways that Americans have represented and understood their nation, they will be expected to relate the intellectual, cultural and historical contexts of developments in American thought and culture (which will be offered in lectures) to a series of texts (which are prescribed reading for the seminar series).</li>\t<li>They will also be encouraged to make frequent interdisciplinary connections to their first year core modules (e.g. American Lit I and II).</li></ul><p>Professional and transferable skills:</p><ul>\t<li>This module will facilitate the development of multiple transferable skills, including but not limited to careful and comprehending reading, textual analysis and evaluation, verbal and written expression, critical thought, and the accurate charting of competing intellectual positions.</li>\t<li>The study of ideas is particularly suited to the development of argumentative and interpretative skill.</li></ul>",
+  "targetStudents": "Available to Final Year SH and JH American and Canadian Studies students and Liberal Arts students. Also available to exchange students hosted by the School of CLAS.",
+  "assessmentPeriod": "Assessed by end of autumn semester",
+  "courseWebLinks": [],
+  "class": [
+    {
+      "activity": "Seminar",
+      "numOfWeeks": "11  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "2 hours"
+    },
+    {
+      "activity": "Lecture",
+      "numOfWeeks": "11  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "2 hours"
+    }
+  ],
+  "assessment": [
+    {
+      "assessment": "Coursework 1",
+      "weight": "40.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Essay 40% 2300-2500 words"
+    },
+    {
+      "assessment": "Coursework 2",
+      "weight": "20.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Source Analysis 20% - 1000 words"
+    },
+    {
+      "assessment": "Coursework 3",
+      "weight": "20.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Source Summary 20% - 1000 words"
+    },
+    {
+      "assessment": "Participation",
+      "weight": "20.00",
+      "type": "Participation",
+      "duration": "",
+      "requirements": "Participation 20%"
+    }
+  ],
+  "belongsTo": {
+    "code": "UDD-ACS",
+    "name": "American and Canadian Studies"
+  },
+  "corequisites": [],
+  "classComment": "Lecture to precede seminar. The School of Cultures, Languages and Area Studies operates an attendance policy. The details of this policy can be found in the student handbook on Workspace and in module handbooks."
+}

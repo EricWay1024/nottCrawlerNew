@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-
+import json
+from tqdm import tqdm
+from retry import retry
 
 cookies = {
     'AMCV_6F5A143A5F3664160A495FE7%40AdobeOrg': '179643557%7CMCIDTS%7C19738%7CMCMID%7C86764993773768519264838785398543367376%7CMCAID%7CNONE%7CMCOPTOUT-1705324788s%7CNONE%7CvVersion%7C5.5.0',
@@ -82,18 +84,19 @@ def get_majors():
     return majors
 
 
-def get_modules_from_major():
+@retry()
+def get_modules_from_major(school, campus='U', year='2024'):
     # The URL to request
     url = "https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL"
     # Parameters to be included in the request
     params = {
         'PAGE': 'UN_CRS_EXT2_FPG',
-        'CAMPUS': 'U',
+        'CAMPUS': campus,
         'TYPE': 'Module',
-        'YEAR': '2024',
+        'YEAR': year,
         'TITLE': '',
         'Module': '',
-        'SCHOOL': 'UDD-ACS',
+        'SCHOOL': school,
         'LINKA': '',
     }
 
@@ -113,7 +116,7 @@ def get_modules_from_major():
     modules_info = []
 
     # Iterate through each 'tr' row and extract module information
-    for row in rows:
+    for i, row in enumerate(rows):
         # Extract the course code
         course_code = row.find('a', id=lambda x: x and x.startswith('ADDRESS_LINK')).text.strip()
 
@@ -129,20 +132,28 @@ def get_modules_from_major():
 
         # Append the extracted information as a dictionary
         modules_info.append({
-            'Course Code': course_code,
-            'Course Title': course_title,
-            'Level': level,
-            'Term': term
+            'campus': campus,
+            'year': year,
+            'school': school,
+            'index': i,
+            'code': course_code,
+            'title': course_title,
+            'level': level,
+            'term': term,
         })
-
-    # Output the list of modules information
-    for module in modules_info:
-        print(f"Course Code: {module['Course Code']}, Course Title: {module['Course Title']}, Level: {module['Level']}, Term: {module['Term']}")
-
     return modules_info
 
 
-majors = get_majors()
-import json 
+try:
+    schools = json.load(open("./res/schools.json"))
+except FileNotFoundError:
+    schools = get_majors()
+    json.dump(schools, open("res/schools.json", "w"))
 
-json.dump(majors, open("res/schools.json", "w"))
+all_modules = []
+for school in tqdm(schools):
+    modules = get_modules_from_major(school["code"])
+    print(modules, file=open('log', 'a'))
+    all_modules.extend(modules)
+
+json.dump(all_modules, open("res/module_brief.json", "w"))
