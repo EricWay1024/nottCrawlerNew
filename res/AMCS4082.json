@@ -1,0 +1,50 @@
+{
+  "year": "2024",
+  "code": "AMCS4082",
+  "title": "MRes Research Skills 1",
+  "credits": 20.0,
+  "level": 4.0,
+  "summary": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\n<p>This module introduces students to the key Research Skills required for successful completion of an MRes in any discipline within the School of Cultures, Languages and Area Studies. It will enable students to become more effective researchers and develop a range of transferable professional skills\u2014from writing and presentation to public engagement and project management. Routes through the module include compulsory and elective courses offered by the Faculty of Arts Researcher Skills Programme, the central Graduate School Researcher Development Programme, and the Social Sciences and Arts Graduate Centre Programme. Students will work with their supervisors to identify which of the skills from these programmes they should prioritise for their development. In addition, students will be required to attend their Department\u2019s Postgraduate Professional Development Programme (which incorporates occasional seminars and postgraduate-led events alongside weekly peer review sessions and lectures by visiting academics). These sessions are intended to give students the opportunity to receive detailed feedback on their written work from their peers, and allow them to develop a range of important skills relating to critical interrogation, intellectual clarity, and verbal articulacy. These skills will prove crucial to the successful completion of their degree and in relation to things such as conference presentations, funding applications and (academic or non-academic) job interviews. The minimum expectation of students is that they complete the two mandatory courses from the Graduate School Researcher Programme in this semester and regularly attend Work-in-Progress sessions within their Department. Their initial Development Needs Analysis can then be further refined after the completion of these strands. The core assessment element of this module, the Literature Review, is a significant first step in establishing the theoretical framework and source base for the MRes dissertation. The feedback on it provided by the student\u2019s supervisors will enable them to go on to plan the overall chapter structure and basic thesis of their dissertation, as well as develop an awareness of any archival resources that may need to be drawn on in the future.</p><p>&nbsp;</p>\n<!-- End HTML Area -->\n</div>\n",
+  "aims": "<div class=\"ps-htmlarea\">\n<!-- Begin HTML Area Name Undisclosed -->\nThe module aims to\u2022 Introduce students to the key methodological and disciplinary issues in their field\u2022 Enable students to create a Development Needs Analysis\u2022 Encourage students to develop skills in finding and managing research data\u2022 Introduce students to some of the research methods emerging from Knowledge Exchange and Impact agendas\u2022 Provide students with an opportunity to network with their peers and develop their work in dialogue with experts in their field from within their Department and from external institutions\u2022 Provide students with experience in assembling a critical and evaluative annotated bibliography\n<!-- End HTML Area -->\n</div>\n",
+  "offering": "American and Canadian Studies",
+  "convenor": [
+    {
+      "name": "Prof Jean-Xavier Ridon"
+    }
+  ],
+  "semester": "Autumn UK",
+  "requisites": [],
+  "additionalRequirements": [
+    {
+      "operator": "",
+      "condition": "Only available for students studying MRes Plans in CLAS"
+    }
+  ],
+  "outcome": "\n<p>Knowledge and understanding</p><p>A1. Knowledge and understanding of key concepts and thinkers relevant to the MRes dissertation</p><p>A2. Knowledge and understanding of theoretical frameworks relevant to independent research in the student\u2019s chosen field as well as arts and humanities research more generally</p><p>Intellectual skills</p><p>B1. Ability to develop and sustain a coherent argument.</p><p>B2. Advanced textual interpretation and critical analysis.</p><p>B3. Ability to critically evaluate the strengths and weaknesses of a variety of theoretical frameworks</p><p>B4. Understanding and appraisal of complex ideas.</p><p>Professional/practical skills</p><p>A1. Scholarly referencing, library and bibliographical skills</p><p>A2. Selection, sifting and synthesis of knowledge from various primary and secondary sources.</p><p>A3. Acquisition of appropriate research skills</p><p>Transferable skills</p><p>D1. Ability to express complex ideas clearly and coherently in writing and speech.</p><p>D3. Word processing</p><p>D4. Collation and distillation of conceptual information</p><p>D5. Conceptual problem solving</p><p>D6. Independent, critical thinking</p>",
+  "targetStudents": "Available for students registered for any MRes degree in the School of Cultures, Languages and Area Studies. Students are reminded that enrolments which are not agreed by the Offering School in advance may be cancelled without notice.",
+  "assessmentPeriod": "Assessed by end of autumn semester",
+  "courseWebLinks": [],
+  "class": [
+    {
+      "activity": "Seminar",
+      "numOfWeeks": "11  weeks",
+      "numOfSessions": "1 week",
+      "sessionDuration": "2 hours"
+    }
+  ],
+  "assessment": [
+    {
+      "assessment": "Coursework 1",
+      "weight": "100.00",
+      "type": "Coursework",
+      "duration": "",
+      "requirements": "Literature Review - 4000 words"
+    }
+  ],
+  "belongsTo": {
+    "code": "UDD-ACS",
+    "name": "American and Canadian Studies"
+  },
+  "corequisites": [],
+  "classComment": "The School of Cultures, Languages and Area Studies operates an attendance policy. The details of this policy can be found in the student handbook on Workspace and in module handbooks."
+}
