@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from re import compile as rc
 import re
+from retry import retry
 
 def replace_spaces(text):
     # This regex will match one or more consecutive whitespace characters (including newlines)
@@ -97,6 +98,8 @@ def parse_modules(soup):
         res.append(year_obj)
     return res
 
+
+@retry(tries=5)
 def get_plan(plan_code, year, campus):
     response = requests.get(f'https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_PLN_EXT3_FPG&CAMPUS={campus}&TYPE=Programme&YEAR={year}&TITLE=UON-e&PLAN={plan_code}&UCAS=', timeout=10) 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -162,11 +165,11 @@ def get_plan(plan_code, year, campus):
     # https://github.com/EricWay1024/uCourse-crawler/blob/master/plan.js
 
 
-if __name__ == '__main__':
-    import json
-    plan = get_plan(
-        'U6UMATHS1',
-        '2024',
-        'U',
-    )
-    print(json.dumps(plan, indent=2))
+# if __name__ == '__main__':
+#     import json
+#     plan = get_plan(
+#         'U6UMATHS1',
+#         '2024',
+#         'U',
+#     )
+#     print(json.dumps(plan, indent=2))

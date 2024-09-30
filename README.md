@@ -18,3 +18,6 @@ Change of plan fields:
 - added year and campus
 - No furtherInformation
 - No notwithstandingRegulations
+
+To run:
+```python -m planCrawler.main```

@@ -46,9 +46,3 @@ def get_all_plans(campus, year):
     
     return plan_info_list
 
-import json
-all_plans = []
-for campus in ['U', 'C', 'M']:
-    all_plans.extend(get_all_plans(campus, '2024'))
-
-json.dump(all_plans, open('./res/plan_brief.json', 'w'))
