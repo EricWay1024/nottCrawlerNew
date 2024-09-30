@@ -1,8 +1,7 @@
 import json
-from .all_plans import get_all_plans
 from .config import YEAR, PLAN_BRIEF_PATH, DB_PATH
 from .database import plan_exists, insert_plan, create_table
-from .get_plan import get_plan
+from .fetch_data import get_plan, get_all_plans
 import threading
 import sqlite3
 import concurrent.futures
