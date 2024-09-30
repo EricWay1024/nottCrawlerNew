@@ -15,4 +15,6 @@ Change of plan fields:
 - school has become a string too
 - the only object field is now modules
 - academicLoad has disappeared
-- 
+- added year and campus
+- No furtherInformation
+- No notwithstandingRegulations
