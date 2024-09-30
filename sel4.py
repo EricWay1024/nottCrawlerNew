@@ -13,8 +13,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from retry import retry
 from tqdm import tqdm
 
-THREADS = 9
-HEADLESS = True
+THREADS = 1
+HEADLESS = False
 
 # Define the path to chromedriver.exe
 driver_path = 'C:\\Users\\eric\\apps\\chromedriver.exe'
@@ -34,11 +34,10 @@ school_map = {o["code"]: o for o in schools}
 module_objs = json.load(open("./res/module_brief.json"))
 
 # Filter out modules from schools named 'United Kingdom'
-module_objs = [m for m in module_objs if school_map[m["school"]]
-               ["name"] != 'United Kingdom']
+module_objs = [m for m in module_objs if m["school"] != 'UNUK']
 
 # Define the database name and path
-db_path = Path('modules.db')
+db_path = Path('modules2.db')
 
 # Initialize the SQLite connection
 
@@ -51,6 +50,7 @@ def init_db(mode):
     cur = conn.cursor()
     cur.execute('''
     CREATE TABLE IF NOT EXISTS modules (
+        mycode TEXT  PRIMARY KEY ,
         code TEXT,
         semester TEXT,
         year TEXT,
@@ -66,32 +66,17 @@ def init_db(mode):
         outcome TEXT,
         targetStudents TEXT,
         assessmentPeriod TEXT,
-        courseWebLinks TEXT,
         class TEXT,
         assessment TEXT,
         belongsTo TEXT,
         corequisites TEXT,
-        classComment TEXT,
-        PRIMARY KEY (code, semester)  -- Ensure uniqueness based on code and semester
+        classComment TEXT
     )
     ''')
     conn.commit()
     return conn, cur
 
-# Function to check if a module (based on code and semester) already exists in the database
 
-
-def module_exists(cursor, code, semester):
-    cursor.execute(
-        'SELECT 1 FROM modules WHERE code = ? AND semester = ?', (code, semester))
-    return cursor.fetchone() is not None
-
-# Function to get all existing module (code, semester) pairs from the database
-
-
-def get_existing_module_pairs(cursor):
-    cursor.execute('SELECT code, semester FROM modules')
-    return {(row[0], row[1]) for row in cursor.fetchall()}
 
 # Function to insert a module into the database
 
@@ -99,31 +84,26 @@ def get_existing_module_pairs(cursor):
 def insert_module(cursor, module):
     cursor.execute('''
     INSERT OR REPLACE INTO modules (
-        code, semester, year, title, credits, level, summary, aims, offering, convenor,
+        mycode, code, semester, year, title, credits, level, summary, aims, offering, convenor,
         requisites, additionalRequirements, outcome, targetStudents, assessmentPeriod,
-        courseWebLinks, class, assessment, belongsTo, corequisites, classComment
+         class, assessment, belongsTo, corequisites, classComment
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
-        module["code"], module["semester"], module["year"], module["title"], module["credits"], module["level"],
-        module["summary"], module["aims"], module["offering"], json.dumps(
-            module["convenor"]),
-        json.dumps(module["requisites"]), json.dumps(
-            module["additionalRequirements"]),
-        module["outcome"], module["targetStudents"], module["assessmentPeriod"], json.dumps(
-            module["courseWebLinks"]),
-        json.dumps(module["class"]), json.dumps(
-            module["assessment"]), json.dumps(module["belongsTo"]),
-        json.dumps(module["corequisites"]), module["classComment"]
+        module["mycode"],
+        module["code"], module["semester"], module["year"], module["title"], 
+        module["credits"], module["level"],
+        module["summary"], module["aims"], module["offering"], module["convenor"],
+        json.dumps(module["requisites"]), 
+        json.dumps(module["additionalRequirements"]),
+        module["outcome"], 
+        module["targetStudents"], 
+        module["assessmentPeriod"], 
+        json.dumps(module["class"]), 
+        json.dumps(module["assessment"]), 
+        json.dumps(module["belongsTo"]),
+        json.dumps(module["corequisites"]), 
+        module["classComment"],
     ))
-
-# Function to remove already existing (code, semester) modules from the module_objs list
-
-
-def filter_existing_modules(module_objs, existing_module_pairs):
-    return [
-        module for module in module_objs
-        if (module["code"], module["term"]) not in existing_module_pairs
-    ]
 
 
 def wait_until_element(browser, id, timeout=10):
@@ -132,13 +112,23 @@ def wait_until_element(browser, id, timeout=10):
         EC.presence_of_element_located((By.ID, id))
     )
 
+def get_mycode(module_obj):
+    campus = module_obj["campus"]
+    year = module_obj["year"]
+    school = module_obj["school"]
+    index = module_obj["index"]
+    mycode = f"{school}_{index}_{year}_{campus}"
+    return mycode
 
-@retry(tries=10)
+
+@retry(tries=5)
 def get_module(browser, module_obj, school_map):
     campus = module_obj["campus"]
     year = module_obj["year"]
     school = module_obj["school"]
     index = module_obj["index"]
+
+    mycode = get_mycode(module_obj)
 
     school_obj = school_map[school]
 
@@ -158,8 +148,8 @@ def get_module(browser, module_obj, school_map):
     def ge(id, desired_type=str):
         try:
             return desired_type(browser.find_element(By.ID, id).text.strip())
-        except NoSuchElementException:
-            return ""
+        except (NoSuchElementException, ValueError):
+            return "" if desired_type == str else float('nan')
 
     def gh(id):
         try:
@@ -167,26 +157,25 @@ def get_module(browser, module_obj, school_map):
         except NoSuchElementException:
             return ""
 
-    def gt(div_id, header_map={}):
+    def gt(div_id, headers):
         try:
             table_element = browser.find_element(By.ID, div_id)
         except NoSuchElementException:
             return []
 
-        headers = [header.text.strip() for header in table_element.find_elements(
-            By.CSS_SELECTOR, "thead th")]
         rows_data = []
 
         for row in table_element.find_elements(By.CSS_SELECTOR, "tbody tr"):
             row_data = {}
-            cells = row.find_elements(By.CSS_SELECTOR, "td")
+            cells = row.find_elements(By.CSS_SELECTOR, 'td:not(.ptgrid-rownumber)')
             for header, cell in zip(headers, cells):
-                row_data[header_map.get(header, header)] = cell.text.strip()
+                row_data[header] = cell.text.strip()
             rows_data.append(row_data)
 
         return rows_data
 
     return {
+        "mycode": mycode,
         "year": ge("UN_PLN_EXT2_WRK_ACAD_YEAR"),
         "code": ge("UN_PLN_EXT2_WRK_SUBJECT_DESCR"),
         "title": ge("UN_PLN_EXT2_WRK_PTS_LIST_TITLE"),
@@ -195,18 +184,27 @@ def get_module(browser, module_obj, school_map):
         "summary": gh("win0divUN_PLN_EXT2_WRK_HTMLAREA11"),
         "aims": gh("win0divUN_PLN_EXT2_WRK_HTMLAREA12"),
         "offering": ge("UN_PLN_EXT2_WRK_DESCRFORMAL"),
-        "convenor": [{"name": ge("UN_PLN_EXT2_WRK_NAME_DISPLAYS_AS")}],
+        "convenor": ge("UN_PLN_EXT2_WRK_NAME_DISPLAYS_AS"),
         "semester": ge("UN_PLN_EXT2_WRK_UN_TRIGGER_NAMES"),
-        "requisites": gt("win0divUN_PRECORQ9_TBL$grid$0", {"Code": "subject", "Title": "courseTitle"}),
-        "additionalRequirements": gt("win0divUN_ADD_REQ_CRSgridc-right$0", {"Operator": "operator", "Condition": "condition"}),
+        "requisites": gt("win0divUN_PRECORQ9_TBL$grid$0", 
+                         ["code", "title"]),
+                        #  {"Code": "subject", "Title": "courseTitle"}),
+        "additionalRequirements": gt("win0divUN_ADD_REQ_CRSgridc-right$0", 
+                                     ["operator", "condition"]),
+                                    #  {"Operator": "operator", "Condition": "condition"}),
         "outcome": gh("UN_PLN_EXT2_WRK_UN_LEARN_OUTCOME"),
         "targetStudents": ge("win0divUN_PLN_EXT2_WRK_HTMLAREA10"),
         "assessmentPeriod": ge("win0divUN_PLN_EXT2_WRK_UN_DESCRFORMAL"),
-        "courseWebLinks": [],
-        "class": gt("win0divUN_PRCS_FRQ_VWgridc-right$0", {"Course Component": "activity", "Number of weeks": "numOfWeeks", "Number of sessions": "numOfSessions", "Duration of a session": "sessionDuration"}),
-        "assessment": gt("win0divUN_CRS_ASAI_TBL$grid$0", {"Assessment": "assessment", "Weight": "weight", "Type": "type", "Duration": "duration", "Requirements": "requirements"}),
+        "class": gt("win0divUN_PRCS_FRQ_VWgridc-right$0", 
+                    ["activity", "numOfWeeks", "numOfSessions", "sessionDuration"]),
+                    # {"Course Component": "activity", "Number of weeks": "numOfWeeks", "Number of sessions": "numOfSessions", "Duration of a session": "sessionDuration"}),
+        "assessment": gt("win0divUN_CRS_ASAI_TBL$grid$0", 
+                         ["assessment", "weight", "type", "duration",  "requirements"]),
+                        #  {"Assessment": "assessment", "Weight": "weight", "Type": "type", "Duration": "duration", "Requirements": "requirements"}),
         "belongsTo": school_obj,
-        "corequisites": gt("win0divUN_COCORQ9_TBLgridc$0", {"Code": "subject", "Title": "courseTitle"}),
+        "corequisites": gt("win0divUN_COCORQ9_TBLgridc$0", 
+                           ["code", "title"]),
+                        #    {"Code": "subject", "Title": "courseTitle"}),
         "classComment": ge("win0divUN_PLN_EXT2_WRK_UN_ACTIVITY_INFO"),
     }
 
@@ -218,42 +216,24 @@ def init_browser():
 # Modify fetch function to use database interaction
 
 
-@retry(tries=2)
-def fetch_modules_in_thread(modules_list, school_map, fetch_mode, total_modules, fetched_count):
+# @retry(tries=2)
+def fetch_modules_in_thread(modules_list, school_map, fetch_mode, fetched_count):
     driver = init_browser()  # Initialize the WebDriver once for each thread
     conn, cursor = init_db(fetch_mode)  # Initialize the database connection
-    try:
-        thread_modules = []  # Store results for this thread
-        for module_obj in modules_list:
-            module_code = module_obj["code"]
-            module_semester = module_obj["term"]
-            if fetch_mode == "existing" and module_exists(cursor, module_code, module_semester):
-                continue  # Skip module if it already exists in the database
-
-        
-            module = get_module(driver, module_obj, school_map)
-            insert_module(cursor, module)  # Insert module into SQLite
-            conn.commit()  # Save all changes to the database
-
-            thread_modules.append(module)
-
-            # Increment fetched count and print progress
-            fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
-            print(f"Fetched {fetched_count[0]}/{total_modules} modules", end='\r')
-
-        return thread_modules
-    except KeyboardInterrupt:
-        driver.quit()
-        conn.close()
-        raise
-    except Exception as e:
-        driver.quit()
-        conn.close()
-        print(f"An error occurred for module {module_code}, semester {module_semester}: {e}")
-    finally:
-        driver.quit()
+    thread_modules = []  # Store results for this thread
+    for module_obj in modules_list:
+        module = get_module(driver, module_obj, school_map)
+        insert_module(cursor, module)  # Insert module into SQLite
         conn.commit()  # Save all changes to the database
-        conn.close()  # Close the database connection
+        thread_modules.append(module)
+
+        # Increment fetched count and print progress
+        fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
+        print(f"Fetched {fetched_count[0]}/{len(module_objs)} modules", end='\r')
+    driver.quit()
+    conn.commit()  # Save all changes to the database
+    conn.close()  # Close the database connection
+    return thread_modules
 
 
 # Main execution function
@@ -262,17 +242,21 @@ def run_fetch(mode="scratch"):
     conn, cursor = init_db(mode)
 
     if mode == "existing":
-        # Get all existing (code, semester) modules from the database before fetching
-        existing_module_pairs = get_existing_module_pairs(cursor)
+        # Function to get all existing module from the database
+        cursor.execute('SELECT mycode FROM modules')
+        exisitng_module_mycodes = {row[0] for row in cursor.fetchall()}
         # Remove the already existing modules from the list to avoid fetching them again
-        filtered_modules = filter_existing_modules(module_objs, existing_module_pairs)
+        filtered_modules = [
+            module for module in module_objs
+            if get_mycode(module) not in exisitng_module_mycodes
+        ]
     else:
         filtered_modules = module_objs
 
     conn.close()
     all_modules = []  # List to store the concatenated results from all threads
     total_modules = len(filtered_modules)  # Get the total number of modules to fetch
-    fetched_count = [0]  # Use a list to keep track of fetched modules
+    fetched_count = [len(exisitng_module_mycodes)]  # Use a list to keep track of fetched modules
 
     max_threads = THREADS
     modules_per_thread = total_modules // max_threads + 1
@@ -280,22 +264,29 @@ def run_fetch(mode="scratch"):
 
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
         future_to_thread = {
-            executor.submit(fetch_modules_in_thread, module_chunk, school_map, mode, total_modules, fetched_count): idx
+            executor.submit(fetch_modules_in_thread, module_chunk, school_map, mode, fetched_count): idx
             for idx, module_chunk in enumerate(modules_split)
         }
 
-        for future in tqdm(as_completed(future_to_thread), total=len(future_to_thread)):
+        for future in as_completed(future_to_thread):
             thread_index = future_to_thread[future]
             try:
                 thread_modules = future.result()
                 all_modules.extend(thread_modules)
             except KeyboardInterrupt:
                 raise
-            except Exception as e:
-                print(f"An error occurred in thread {thread_index}: {e}")
+            # except Exception as e:
+                # print(f"An error occurred in thread {thread_index}: {e}")
     print("\nAll modules have been fetched and saved to the database.")
 
 
 # Example usage:
 # run_fetch(mode="scratch")  # For scratch mode
 run_fetch(mode="existing")  # For fetching only new modules
+
+# driver = init_browser()
+# s = get_module(driver,
+#     {"campus": "U", "year": "2024", "school": "USC-MATH", "index": 1, "code": "MATH3004", "title": "Game Theory", "level": "3", "term": "Spring UK"}, 
+#     school_map)
+# from pprint import pprint
+# pprint(s)
