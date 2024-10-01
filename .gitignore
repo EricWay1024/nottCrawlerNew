@@ -4,3 +4,4 @@ venv/*
 *.json
 __pycache__
 backup/
+res/
