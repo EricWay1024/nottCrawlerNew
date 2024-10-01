@@ -1,0 +1,223 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Plan Object Schema",
+    "description": "A schema for describing the structure of a plan object with nested modules, years, groups, and modules.",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The title of the academic plan."
+      },
+      "degreeType": {
+        "type": "string",
+        "description": "The type of degree associated with the plan (e.g., Bachelor, Master)."
+      },
+      "degree": {
+        "type": "string",
+        "description": "The full name of the degree (e.g., Bachelor of Science with Honours)."
+      },
+      "year": {
+        "type": "string",
+        "description": "The academic year, represented as a string, e.g. '2024'."
+      },
+      "campus": {
+        "type": "string",
+        "enum": ["C", "M", "U"],
+        "description": "The campus where the plan is offered. 'C' for China, 'M' for Malaysia, 'U' for United Kingdom."
+      },
+      "academicPlanCode": {
+        "type": "string",
+        "description": "A unique code of variable length representing the academic plan, e.g. U6UFNMTH."
+      },
+      "ucasCode": {
+        "type": "string",
+        "description": "The UCAS code for the plan."
+      },
+      "school": {
+        "type": "string",
+        "description": "The school or department offering the plan."
+      },
+      "planType": {
+        "type": "string",
+        "description": "The type of the plan, e.g., 'Single Subject'."
+      },
+      "deliveryMode": {
+        "type": "string",
+        "description": "The mode of delivery, e.g., 'Full-time. In Person'."
+      },
+      "duration": {
+        "type": "string",
+        "description": "The duration of the plan (e.g., '3 Years')."
+      },
+      "subjectBenchmark": {
+        "type": "string",
+        "description": "Relevant QAA Subject Benchmark(s)."
+      },
+      "planAccreditation": {
+        "type": "string",
+        "description": "Details of any accreditation associated with the plan."
+      },
+      "educationalAimsIntro": {
+        "type": "string",
+        "description": "An introduction to the educational aims of the plan (HTML content)."
+      },
+      "educationalAims": {
+        "type": "string",
+        "description": "The detailed educational aims of the plan (HTML content)."
+      },
+      "outlineDescription": {
+        "type": "string",
+        "description": "A brief outline description of the plan (HTML content)."
+      },
+      "distinguishingFeatures": {
+        "type": "string",
+        "description": "Any distinguishing features of the plan (HTML content)."
+      },
+      "planRequirements": {
+        "type": "string",
+        "description": "The requirements needed for entry."
+      },
+      "includingSubjects": {
+        "type": "string",
+        "description": "Subjects that are required for the plan."
+      },
+      "excludingSubjects": {
+        "type": "string",
+        "description": "Subjects that are excluded from the plan."
+      },
+      "otherRequirements": {
+        "type": "string",
+        "description": "Any other requirements needed for the plan."
+      },
+      "ieltsRequirements": {
+        "type": "string",
+        "description": "IELTS requirements for the plan."
+      },
+      "generalInformation": {
+        "type": "string",
+        "description": "General information about the plan."
+      },
+      "assessment": {
+        "type": "string",
+        "description": "Information about how the plan will be assessed (HTML content)."
+      },
+      "assessmentMarking": {
+        "type": "string",
+        "description": "Marking details for assessments (HTML content)."
+      },
+      "progressionInformation": {
+        "type": "string",
+        "description": "Information about progression through the plan (HTML content)."
+      },
+      "borderlineCriteria": {
+        "type": "string",
+        "description": "Criteria used for borderline cases in assessment (HTML content)."
+      },
+      "degreeInformation": {
+        "type": "string",
+        "description": "Information about the degree and award regulations (HTML content)."
+      },
+      "courseWeightings": {
+        "type": "string",
+        "description": "Weighting of different components in the course."
+      },
+      "degreeCalculationModel": {
+        "type": "string",
+        "description": "The model used for degree calculation."
+      },
+      "otherRegulations": {
+        "type": "string",
+        "description": "Other regulations related to the plan (HTML content)."
+      },
+      "additionalRegulations": {
+        "type": "string",
+        "description": "Additional regulations related to the plan (HTML content)."
+      },
+      "learningOutcomes": {
+        "type": "string",
+        "description": "Expected learning outcomes from the plan (HTML content)."
+      },
+      "modules": {
+        "type": "array",
+        "description": "A list of years, each containing groups and modules.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The title of the academic year, e.g. 'U6UFNMTH - Part I'."
+            },
+            "groups": {
+              "type": "array",
+              "description": "A list of groups in the year.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the group, e.g. 'U6UFNMTH-PI-Restricted-Group1'."
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "A message associated with the group, e.g.'Students must take a minimum of 20 and a maximum of 20 credits from this group.'."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["Compulsory", "Restricted", "Alternative"],
+                    "description": "The type of group: 'Compulsory', 'Restricted', or 'Alternative'."
+                  },
+                  "modules": {
+                    "type": "array",
+                    "description": "A list of modules within the group.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "The code of the module."
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "The title of the module."
+                        },
+                        "credits": {
+                          "type": "string",
+                          "description": "The number of credits associated with the module."
+                        },
+                        "compensatable": {
+                          "type": "string",
+                          "enum": ["Y", "N"],
+                          "description": "'Y' for compensatable, 'N' for non-compensatable."
+                        },
+                        "taught": {
+                          "type": "string",
+                          "description": "The semester in which the module is taught."
+                        }
+                      },
+                      "required": ["code", "title", "credits", "compensatable", "taught"]
+                    }
+                  }
+                },
+                "required": ["title", "type", "modules"]
+              }
+            },
+            "additionalCourseChoice": {
+              "type": "string",
+              "description": "Any additional course choice information for the year."
+            }
+          },
+          "required": ["title", "groups"]
+        }
+      }
+    },
+    "required": [
+      "title", "degreeType", "degree", "year", "campus", "academicPlanCode", "ucasCode", "school", 
+      "planType", "deliveryMode", "duration", "subjectBenchmark", "planAccreditation", 
+      "educationalAimsIntro", "educationalAims", "outlineDescription", "distinguishingFeatures", 
+      "planRequirements", "includingSubjects", "excludingSubjects", "otherRequirements", 
+      "ieltsRequirements", "generalInformation", "assessment", "assessmentMarking", 
+      "progressionInformation", "borderlineCriteria", "degreeInformation", "courseWeightings", 
+      "degreeCalculationModel", "otherRegulations", "additionalRegulations", "learningOutcomes", "modules"
+    ]
+  }
+  

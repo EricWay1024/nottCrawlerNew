@@ -203,8 +203,8 @@ def get_plan(plan_code, year, campus):
         "courseWeightings": ge_("UN_PLN_EXT2_WRK_DESCR100A$435$"),
         "degreeCalculationModel": ge_("UN_PLN_EXT2_WRK_DESCRLONG"),
 
-        "otherRegulations": ge_("UN_PPLN_DTL_TBL_UN_OTHER_REGULATN"),
-        "additionalRegulations": ge_("UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"),
+        "otherRegulations": gh_("UN_PPLN_DTL_TBL_UN_OTHER_REGULATN"),
+        "additionalRegulations": gh_("UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"),
 
         # Learning outcomes
         "learningOutcomes": gh_("win0div$ICField482"),

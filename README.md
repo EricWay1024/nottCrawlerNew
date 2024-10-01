@@ -26,8 +26,9 @@ Technical notes:
 
 
 TODO:
-- Refactor the `module` module
-- Make `module` more stable (currently have to run a lot of times)
+
+- [x] Refactor the `module` module
+- [ ] Make `module` more stable ~~(currently have to run a lot of times)~~ (It seems beter now, but needs further test)
 - A blog post on how on developed these
 - **Output Data Specification**
 - Rewrite this README
