@@ -1,0 +1,1 @@
+These scripts are for fixing some problems of the data while I was developing. If you run the module now you shouldn't need these fixing scripts.
