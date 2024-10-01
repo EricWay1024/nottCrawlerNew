@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-import json
-from tqdm import tqdm
 from retry import retry
+from .config import YEAR, TESTING
+from tqdm import tqdm
 
 def get_schools_from_campus(campus):
     params = {
@@ -46,13 +46,16 @@ def get_schools_from_campus(campus):
 
 def get_all_schools():
     res = []
-    for campus in ['C', 'M', 'U']:
+    campuses = ['C', 'M', 'U'] if not TESTING else ['M']
+    for campus in tqdm(campuses):
         res.extend(get_schools_from_campus(campus))
     return res
 
 
 @retry(tries=5)
-def get_modules_from_school(school, campus='U', year='2024'):
+def get_modules_from_school(school_obj):
+    campus = school_obj['campus']
+    school = school_obj['code']
     # The URL to request
     url = "https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL"
     # Parameters to be included in the request
@@ -60,7 +63,7 @@ def get_modules_from_school(school, campus='U', year='2024'):
         'PAGE': 'UN_CRS_EXT2_FPG',
         'CAMPUS': campus,
         'TYPE': 'Module',
-        'YEAR': year,
+        'YEAR': YEAR,
         'TITLE': '',
         'Module': '',
         'SCHOOL': school,
@@ -100,26 +103,21 @@ def get_modules_from_school(school, campus='U', year='2024'):
         # Append the extracted information as a dictionary
         modules_info.append({
             'campus': campus,
-            'year': year,
+            'year': YEAR,
             'school': school,
             'index': i,
             'code': course_code,
             'title': course_title,
             'level': level,
             'term': term,
+            'school_obj': school_obj,
         })
     return modules_info
 
-
-try:
-    schools = json.load(open("./res/schools.json"))
-except FileNotFoundError:
-    schools = get_all_schools()
-    json.dump(schools, open("res/schools.json", "w"))
-
-all_modules = []
-for school in tqdm(schools):
-    modules = get_modules_from_school(school["code"], campus=school['campus'])
-    all_modules.extend(modules)
-
-json.dump(all_modules, open("res/module_brief.json", "w"))
+def get_all_modules(schools):
+    all_modules = []
+    for school in tqdm(schools):
+        modules = get_modules_from_school(
+            school["code"], campus=school['campus'], year=YEAR)
+        all_modules.extend(modules)
+    return all_modules
