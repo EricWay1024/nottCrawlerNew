@@ -1,17 +1,15 @@
 import sqlite3
-import os
 from pathlib import Path
 import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, InvalidSessionIdException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from retry import retry
-from tqdm import tqdm
 
 THREADS = 1
 HEADLESS = False
@@ -37,7 +35,7 @@ module_objs = json.load(open("./res/module_brief.json"))
 module_objs = [m for m in module_objs if m["school"] != 'UNUK']
 
 # Define the database name and path
-db_path = Path('modules2.db')
+db_path = Path('./res/modules.db')
 
 # Initialize the SQLite connection
 
@@ -222,7 +220,12 @@ def fetch_modules_in_thread(modules_list, school_map, fetch_mode, fetched_count)
     conn, cursor = init_db(fetch_mode)  # Initialize the database connection
     thread_modules = []  # Store results for this thread
     for module_obj in modules_list:
-        module = get_module(driver, module_obj, school_map)
+        try:
+            module = get_module(driver, module_obj, school_map)
+        except InvalidSessionIdException:
+            driver = init_browser()
+            module = get_module(driver, module_obj, school_map)
+
         insert_module(cursor, module)  # Insert module into SQLite
         conn.commit()  # Save all changes to the database
         thread_modules.append(module)

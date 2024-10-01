@@ -20,4 +20,4 @@ Change of plan fields:
 - No notwithstandingRegulations
 
 To run:
-```python -m planCrawler.main```
+```python -m plan.main```
