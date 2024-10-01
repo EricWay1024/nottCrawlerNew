@@ -129,6 +129,8 @@ def fetch_modules_in_thread(modules_list, fetched_count, total_count):
     conn, cursor = init_db()  # Initialize the database connection
     for module_obj in modules_list:
         if module_exists(cursor, module_obj):
+            fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
+            print(f"Fetched {fetched_count[0]}/{total_count} modules", end='\r')
             continue
         try:
             module = get_module(driver, module_obj)

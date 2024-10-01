@@ -41,12 +41,14 @@ def init_db():
 # Function to insert a module into the database
 def insert_module(cursor, module):
     cursor.execute(f'''
-    INSERT OR REPLACE INTO {COURSE_TABLE_NAME} (
-        mycode, code, semester, year, campus,
+    INSERT INTO {COURSE_TABLE_NAME} (
+        mycode, 
+        code, 
+        semester, year, campus,
         title, credits, level, summary, aims, offering, convenor,
         requisites, additionalRequirements, outcome, targetStudents, assessmentPeriod,
          class, assessment, belongsTo, corequisites, classComment
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         module["mycode"],
         module["code"], module["semester"], module["year"], 
