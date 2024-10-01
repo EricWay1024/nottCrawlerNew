@@ -20,6 +20,10 @@ Change of plan fields:
 - added year and campus
 - No furtherInformation
 - No notwithstandingRegulations
+- add additionalRegulations
+- remove "overview"
+        "assessmentMethods"
+        "teachingAndLearning" => everything in learning outcomes
 
 To run:
 ```python -m plan.main```
