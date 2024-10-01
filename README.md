@@ -26,4 +26,13 @@ Change of plan fields:
         "teachingAndLearning" => everything in learning outcomes
 
 To run:
+```mkdir res```
 ```python -m plan.main```
+```python -m module.fetch_brief```
+```python -m module.fetch_modules```
+
+TODO:
+- Refactor the `module` module
+- Make `module` more stable (currently have to run a lot of times)
+- A blog post on how on developed these
+- **Output Data Description**
