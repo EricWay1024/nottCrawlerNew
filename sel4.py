@@ -52,6 +52,7 @@ def init_db(mode):
         code TEXT,
         semester TEXT,
         year TEXT,
+        campus TEXT,
         title TEXT,
         credits REAL,
         level REAL,
@@ -82,13 +83,16 @@ def init_db(mode):
 def insert_module(cursor, module):
     cursor.execute('''
     INSERT OR REPLACE INTO modules (
-        mycode, code, semester, year, title, credits, level, summary, aims, offering, convenor,
+        mycode, code, semester, year, campus,
+        title, credits, level, summary, aims, offering, convenor,
         requisites, additionalRequirements, outcome, targetStudents, assessmentPeriod,
          class, assessment, belongsTo, corequisites, classComment
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         module["mycode"],
-        module["code"], module["semester"], module["year"], module["title"], 
+        module["code"], module["semester"], module["year"], 
+        module['campus'],
+        module["title"], 
         module["credits"], module["level"],
         module["summary"], module["aims"], module["offering"], module["convenor"],
         json.dumps(module["requisites"]), 
@@ -174,6 +178,7 @@ def get_module(browser, module_obj, school_map):
 
     return {
         "mycode": mycode,
+        "campus": campus,
         "year": ge("UN_PLN_EXT2_WRK_ACAD_YEAR"),
         "code": ge("UN_PLN_EXT2_WRK_SUBJECT_DESCR"),
         "title": ge("UN_PLN_EXT2_WRK_PTS_LIST_TITLE"),
