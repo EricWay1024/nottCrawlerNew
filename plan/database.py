@@ -1,10 +1,10 @@
 import sqlite3
 import json
-from .config import DB_PATH
+from .config import DB_PATH, PLAN_TABLE_NAME
 
 # SQL Script to create the table
-make_table_script = """
-CREATE TABLE IF NOT EXISTS plan (
+make_table_script = f"""
+CREATE TABLE IF NOT EXISTS {PLAN_TABLE_NAME} (
     title TEXT,
     degree TEXT,
     degreeType TEXT,
@@ -46,15 +46,15 @@ CREATE TABLE IF NOT EXISTS plan (
 
 # Function to check if a plan already exists in the database
 def plan_exists(cursor, year, campus, academicPlanCode):
-    query = "SELECT 1 FROM plan WHERE year = ? AND campus = ? AND academicPlanCode = ?"
+    query = f"SELECT 1 FROM {PLAN_TABLE_NAME} WHERE year = ? AND campus = ? AND academicPlanCode = ?"
     cursor.execute(query, (year, campus, academicPlanCode))
     return cursor.fetchone() is not None
 
 
 def insert_plan(cursor, plan_data):
     # Prepare the insert query
-    insert_query = '''
-    INSERT INTO plan (
+    insert_query = f'''
+    INSERT INTO {PLAN_TABLE_NAME} (
         title, 
         degree,
         degreeType,
