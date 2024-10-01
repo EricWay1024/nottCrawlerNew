@@ -17,7 +17,7 @@ python -m module.fetch_modules
 Oh, you also need to set up the Chrome webdriver for Selenium... I hope you know how to do it.
 
 Current features:
-- Concureency!!
+- Concurrency!!
 - Resumable download!!!
 
 Technical notes:
@@ -31,6 +31,7 @@ TODO:
 - A blog post on how on developed these
 - **Output Data Specification**
 - Rewrite this README
+- Conform to flake8
 
 The output data format has changed so nott-course also changed a bit.
 
