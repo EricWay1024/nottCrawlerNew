@@ -211,13 +211,3 @@ def get_plan(plan_code, year, campus):
     }
 
     # https://github.com/EricWay1024/uCourse-crawler/blob/master/plan.js
-
-
-# if __name__ == '__main__':
-#     import json
-#     plan = get_plan(
-#         'U6UMATHS1',
-#         '2024',
-#         'U',
-#     )
-#     print(json.dumps(plan, indent=2))
