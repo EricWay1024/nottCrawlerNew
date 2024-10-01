@@ -11,12 +11,6 @@ import concurrent.futures
 def insert_plan_to_db(plan):
     global finished_count
 
-    campus_map = {
-        "U": "United Kingdom",
-        "M": "Malaysia",
-        "C": "China",
-    }
-
     plan_code = plan["code"]
     year = plan["year"]
     campus = plan["campus"]
@@ -26,7 +20,7 @@ def insert_plan_to_db(plan):
     cursor = conn.cursor()
 
     # Check if the plan already exists in the database
-    if plan_exists(cursor, year, campus_map[campus], plan_code):
+    if plan_exists(cursor, year, campus, plan_code):
         conn.close()
         with counter_lock:
             finished_count += 1

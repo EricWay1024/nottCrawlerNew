@@ -4,8 +4,10 @@ from .config import DB_PATH
 
 # SQL Script to create the table
 make_table_script = """
-CREATE TABLE IF NOT EXISTS plans (
+CREATE TABLE IF NOT EXISTS plan (
     title TEXT,
+    degree TEXT,
+    degreeType TEXT,
     year TEXT,
     campus TEXT,
     academicPlanCode TEXT,
@@ -56,6 +58,8 @@ def insert_plan(cursor, plan_data):
     insert_query = '''
     INSERT INTO plans (
         title, 
+        degree,
+        degreeType,
         year, 
         campus, 
         academicPlanCode, 
@@ -89,12 +93,15 @@ def insert_plan(cursor, plan_data):
         teachingAndLearning, 
         learningOutcomes, 
         modules
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     '''
 
     # Insert the plan data into the database
     cursor.execute(insert_query, (
-        plan_data["title"], plan_data["year"], plan_data["campus"], plan_data["academicPlanCode"],
+        plan_data["title"], 
+        plan_data["degree"],
+        plan_data["degreeType"],
+        plan_data["year"], plan_data["campus"], plan_data["academicPlanCode"],
         plan_data["ucasCode"], plan_data["school"], plan_data["planType"], plan_data["deliveryMode"],
         plan_data["duration"], plan_data["subjectBenchmark"], plan_data["planAccreditation"],
         plan_data["educationalAimsIntro"], plan_data["educationalAims"], plan_data["outlineDescription"],

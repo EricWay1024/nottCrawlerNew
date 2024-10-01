@@ -1,3 +1,5 @@
+Note: campus should always be a single letter in ['C', 'M', 'U']!!!
+
 Change of course fields:
 - Add corequisites
 - Add classComment

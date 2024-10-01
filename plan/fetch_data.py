@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from re import compile as rc
 import re
 from retry import retry
+from .util import get_degree_info
 
 
 def get_all_plans(campus, year):
@@ -155,10 +156,14 @@ def get_plan(plan_code, year, campus):
     ge_ = lambda id: ge(soup, id)
     gh_ = lambda id: gh(soup, id)
 
+    plan_title = ge_("UN_PAM_EXTR_WRK_DESCR200")
+    degree_info = get_degree_info(plan_title)
+
     return {
-        "title": ge_("UN_PAM_EXTR_WRK_DESCR200"),
-           "year": ge_("UN_PLN_EXRT_WRK_ACAD_YEAR$486$"),
-           "campus": ge_("UN_PLN_EXRT_WRK_DESCR1"),
+        "title": plan_title,
+        **degree_info,  # degreeType and degree
+        "year": year,
+        "campus": campus,
         "academicPlanCode": ge_("UN_PPLN_DTL_TBL_ACAD_PLAN$22$"),
         "ucasCode": ge_("UN_PAM_EXTR_WRK_DESCRSHORT1$313$"),
         "school": ge_("UN_PLN_EXT2_WRK_SCH_DAILY_DETAIL"),
