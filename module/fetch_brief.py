@@ -117,7 +117,6 @@ def get_modules_from_school(school_obj):
 def get_all_modules(schools):
     all_modules = []
     for school in tqdm(schools):
-        modules = get_modules_from_school(
-            school["code"], campus=school['campus'], year=YEAR)
+        modules = get_modules_from_school(school)
         all_modules.extend(modules)
     return all_modules
