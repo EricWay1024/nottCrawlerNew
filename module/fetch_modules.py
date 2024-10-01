@@ -1,6 +1,3 @@
-import sqlite3
-from pathlib import Path
-import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -8,104 +5,13 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, InvalidSessionIdException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from retry import retry
+from .util import get_mycode
+from .database import init_db, insert_module, module_exists
+from .config import THREADS, DRIVER_PATH, HEADLESS
+import random
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-THREADS = 1
-HEADLESS = False
-
-# Define the path to chromedriver.exe
-driver_path = 'C:\\Users\\eric\\apps\\chromedriver.exe'
-
-# Define Chrome options
-options = Options()
-if HEADLESS:
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-
-# Initialize the Chrome WebDriver service
-service = Service(driver_path)
-
-# Load the school and module data
-schools = json.load(open("./res/schools.json"))
-school_map = {o["code"]: o for o in schools}
-module_objs = json.load(open("./res/module_brief.json"))
-
-# Filter out modules from schools named 'United Kingdom'
-module_objs = [m for m in module_objs if m["school"] != 'UNUK']
-
-# Define the database name and path
-db_path = Path('./res/modules.db')
-
-# Initialize the SQLite connection
-
-
-def init_db(mode):
-    if mode == "scratch" and db_path.exists():
-        db_path.unlink()  # Delete the existing database if in scratch mode
-
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    cur.execute('''
-    CREATE TABLE IF NOT EXISTS modules (
-        mycode TEXT  PRIMARY KEY ,
-        code TEXT,
-        semester TEXT,
-        year TEXT,
-        campus TEXT,
-        title TEXT,
-        credits REAL,
-        level REAL,
-        summary TEXT,
-        aims TEXT,
-        offering TEXT,
-        convenor TEXT,
-        requisites TEXT,
-        additionalRequirements TEXT,
-        outcome TEXT,
-        targetStudents TEXT,
-        assessmentPeriod TEXT,
-        class TEXT,
-        assessment TEXT,
-        belongsTo TEXT,
-        corequisites TEXT,
-        classComment TEXT
-    )
-    ''')
-    conn.commit()
-    return conn, cur
-
-
-
-# Function to insert a module into the database
-
-
-def insert_module(cursor, module):
-    cursor.execute('''
-    INSERT OR REPLACE INTO modules (
-        mycode, code, semester, year, campus,
-        title, credits, level, summary, aims, offering, convenor,
-        requisites, additionalRequirements, outcome, targetStudents, assessmentPeriod,
-         class, assessment, belongsTo, corequisites, classComment
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        module["mycode"],
-        module["code"], module["semester"], module["year"], 
-        module['campus'],
-        module["title"], 
-        module["credits"], module["level"],
-        module["summary"], module["aims"], module["offering"], module["convenor"],
-        json.dumps(module["requisites"]), 
-        json.dumps(module["additionalRequirements"]),
-        module["outcome"], 
-        module["targetStudents"], 
-        module["assessmentPeriod"], 
-        json.dumps(module["class"]), 
-        json.dumps(module["assessment"]), 
-        json.dumps(module["belongsTo"]),
-        json.dumps(module["corequisites"]), 
-        module["classComment"],
-    ))
 
 
 def wait_until_element(browser, id, timeout=10):
@@ -114,32 +20,24 @@ def wait_until_element(browser, id, timeout=10):
         EC.presence_of_element_located((By.ID, id))
     )
 
-def get_mycode(module_obj):
-    campus = module_obj["campus"]
-    year = module_obj["year"]
-    school = module_obj["school"]
-    index = module_obj["index"]
-    mycode = f"{school}_{index}_{year}_{campus}"
-    return mycode
-
 
 @retry(tries=5)
-def get_module(browser, module_obj, school_map):
+def get_module(browser, module_obj):
     campus = module_obj["campus"]
     year = module_obj["year"]
     school = module_obj["school"]
     index = module_obj["index"]
+    school_obj = module_obj["school_obj"]
 
     mycode = get_mycode(module_obj)
-
-    school_obj = school_map[school]
 
     browser.get(
         f"https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/"
         f"UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE="
         f"UN_CRS_EXT2_FPG&"
         f"CAMPUS={campus}&TYPE=Module&YEAR={year}&TITLE=&Module=&"
-        f"SCHOOL={school}&LINKA=&CAMPUS={campus}&TYPE=Module&YEAR={year}..."
+        f"SCHOOL={school}&LINKA="
+        # "&CAMPUS={campus}&TYPE=Module&YEAR={year}"
     )
 
     wait_until_element(browser, "win0divUN_PCRSE_TBLgridc$0")
@@ -213,88 +111,73 @@ def get_module(browser, module_obj, school_map):
 
 
 def init_browser():
+    # Define Chrome options
+    options = Options()
+    if HEADLESS:
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+    # Initialize the Chrome WebDriver service
+    service = Service(DRIVER_PATH)
     return webdriver.Chrome(service=service, options=options)
 
 
 # Modify fetch function to use database interaction
-
-
-# @retry(tries=2)
-def fetch_modules_in_thread(modules_list, school_map, fetch_mode, fetched_count):
+# We don't want to start a browser for each module (too slow),
+# so each browser is responsible for a list of modules
+def fetch_modules_in_thread(modules_list, fetched_count, total_count):
     driver = init_browser()  # Initialize the WebDriver once for each thread
-    conn, cursor = init_db(fetch_mode)  # Initialize the database connection
-    thread_modules = []  # Store results for this thread
+    conn, cursor = init_db()  # Initialize the database connection
     for module_obj in modules_list:
+        if module_exists(cursor, module_obj):
+            continue
         try:
-            module = get_module(driver, module_obj, school_map)
-        except InvalidSessionIdException:
+            module = get_module(driver, module_obj)
+        except InvalidSessionIdException:  # If the brwoser died for some reason
             driver = init_browser()
-            module = get_module(driver, module_obj, school_map)
+            module = get_module(driver, module_obj)
 
         insert_module(cursor, module)  # Insert module into SQLite
         conn.commit()  # Save all changes to the database
-        thread_modules.append(module)
-
         # Increment fetched count and print progress
         fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
-        print(f"Fetched {fetched_count[0]}/{len(module_objs)} modules", end='\r')
+        print(f"Fetched {fetched_count[0]}/{total_count} modules", end='\r')
     driver.quit()
     conn.commit()  # Save all changes to the database
     conn.close()  # Close the database connection
-    return thread_modules
-
 
 # Main execution function
+def run_fetch(modules_list):
+    total_count = len(modules_list)  # Get the total number of modules to fetch
+    fetched_count = [0]  # Use a list to keep track of fetched modules
 
-def run_fetch(mode="scratch"):
-    conn, cursor = init_db(mode)
+    # This is because we want the number of modules already fetched to be roughly
+    # the same in each thread:
+    random.shuffle(modules_list)
 
-    if mode == "existing":
-        # Function to get all existing module from the database
-        cursor.execute('SELECT mycode FROM modules')
-        exisitng_module_mycodes = {row[0] for row in cursor.fetchall()}
-        # Remove the already existing modules from the list to avoid fetching them again
-        filtered_modules = [
-            module for module in module_objs
-            if get_mycode(module) not in exisitng_module_mycodes
-        ]
-    else:
-        filtered_modules = module_objs
+    modules_per_thread = total_count // THREADS + 1
+    modules_split = [modules_list[i:i + modules_per_thread] for i in range(0, total_count, modules_per_thread)]
 
-    conn.close()
-    all_modules = []  # List to store the concatenated results from all threads
-    total_modules = len(filtered_modules)  # Get the total number of modules to fetch
-    fetched_count = [len(exisitng_module_mycodes)]  # Use a list to keep track of fetched modules
-
-    max_threads = THREADS
-    modules_per_thread = total_modules // max_threads + 1
-    modules_split = [filtered_modules[i:i + modules_per_thread] for i in range(0, total_modules, modules_per_thread)]
-
-    with ThreadPoolExecutor(max_workers=max_threads) as executor:
+    errors_occured = False
+    with ThreadPoolExecutor(max_workers=THREADS) as executor:
         future_to_thread = {
-            executor.submit(fetch_modules_in_thread, module_chunk, school_map, mode, fetched_count): idx
+            executor.submit(fetch_modules_in_thread, module_chunk, fetched_count, total_count): idx
             for idx, module_chunk in enumerate(modules_split)
         }
 
         for future in as_completed(future_to_thread):
             thread_index = future_to_thread[future]
             try:
-                thread_modules = future.result()
-                all_modules.extend(thread_modules)
+                future.result()
             except KeyboardInterrupt:
                 raise
-            # except Exception as e:
-                # print(f"An error occurred in thread {thread_index}: {e}")
+            except Exception as e:
+                print(f"An error occurred in thread {thread_index}: {e}")
+                errors_occured = True
+    
+    fetched_count = [0]
+    if errors_occured:
+        # Do the rest in single thread... maybe
+        fetch_modules_in_thread(modules_list, fetched_count, total_count)
+
     print("\nAll modules have been fetched and saved to the database.")
 
-
-# Example usage:
-# run_fetch(mode="scratch")  # For scratch mode
-run_fetch(mode="existing")  # For fetching only new modules
-
-# driver = init_browser()
-# s = get_module(driver,
-#     {"campus": "U", "year": "2024", "school": "USC-MATH", "index": 1, "code": "MATH3004", "title": "Game Theory", "level": "3", "term": "Spring UK"}, 
-#     school_map)
-# from pprint import pprint
-# pprint(s)
