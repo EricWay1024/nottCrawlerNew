@@ -36,9 +36,7 @@ CREATE TABLE IF NOT EXISTS plan (
     courseWeightings TEXT,
     degreeCalculationModel TEXT,
     otherRegulations TEXT,
-    overview TEXT,
-    assessmentMethods TEXT,
-    teachingAndLearning TEXT,
+    additionalRegulations TEXT,
     learningOutcomes TEXT,
     modules TEXT,  -- Store modules as JSON string
     PRIMARY KEY (year, campus, academicPlanCode)
@@ -48,7 +46,7 @@ CREATE TABLE IF NOT EXISTS plan (
 
 # Function to check if a plan already exists in the database
 def plan_exists(cursor, year, campus, academicPlanCode):
-    query = "SELECT 1 FROM plans WHERE year = ? AND campus = ? AND academicPlanCode = ?"
+    query = "SELECT 1 FROM plan WHERE year = ? AND campus = ? AND academicPlanCode = ?"
     cursor.execute(query, (year, campus, academicPlanCode))
     return cursor.fetchone() is not None
 
@@ -56,7 +54,7 @@ def plan_exists(cursor, year, campus, academicPlanCode):
 def insert_plan(cursor, plan_data):
     # Prepare the insert query
     insert_query = '''
-    INSERT INTO plans (
+    INSERT INTO plan (
         title, 
         degree,
         degreeType,
@@ -88,12 +86,10 @@ def insert_plan(cursor, plan_data):
         courseWeightings, 
         degreeCalculationModel, 
         otherRegulations, 
-        overview, 
-        assessmentMethods, 
-        teachingAndLearning, 
+        additionalRegulations,
         learningOutcomes, 
         modules
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     '''
 
     # Insert the plan data into the database
@@ -110,7 +106,7 @@ def insert_plan(cursor, plan_data):
         plan_data["generalInformation"], plan_data["assessment"], plan_data["assessmentMarking"],
         plan_data["progressionInformation"], plan_data["borderlineCriteria"], plan_data["degreeInformation"],
         plan_data["courseWeightings"], plan_data["degreeCalculationModel"], plan_data["otherRegulations"],
-        plan_data["overview"], plan_data["assessmentMethods"], plan_data["teachingAndLearning"],
+        plan_data["additionalRegulations"],
         plan_data["learningOutcomes"], json.dumps(plan_data["modules"])
     ))
 

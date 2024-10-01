@@ -203,14 +203,11 @@ def get_plan(plan_code, year, campus):
         "courseWeightings": ge_("UN_PLN_EXT2_WRK_DESCR100A$435$"),
         "degreeCalculationModel": ge_("UN_PLN_EXT2_WRK_DESCRLONG"),
 
-        "otherRegulations": ge_("UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"),
-        # "notwithstandingRegulations": ge_(),
+        "otherRegulations": ge_("UN_PPLN_DTL_TBL_UN_OTHER_REGULATN"),
+        "additionalRegulations": ge_("UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"),
 
         # Learning outcomes
-        "overview": gh_("win0divUN_PPLN_DTL_TBL_UN_OVERVIEW"),
-        "assessmentMethods": gh_("win0divUN_PPLN_DTL_TBL_UN_ASSEMNT_SUMM"),
-        "teachingAndLearning": gh_("win0divUN_PPLN_DTL_TBL_UN_TEACH_LRN_SUMM"),
-        "learningOutcomes": gh_("win0divUN_QAAL_OTC_TBLgridc-right$3")
+        "learningOutcomes": gh_("win0div$ICField482"),
     }
 
     # https://github.com/EricWay1024/uCourse-crawler/blob/master/plan.js
