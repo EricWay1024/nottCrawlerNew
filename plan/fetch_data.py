@@ -4,6 +4,9 @@ from re import compile as rc
 import re
 from retry import retry
 from .util import get_degree_info
+from jsonschema import validate
+from .config import PLAN_SCHEMA
+from jsonschema.exceptions import ValidationError
 
 
 def get_all_plans(campus, year):
@@ -159,7 +162,7 @@ def get_plan(plan_code, year, campus):
     plan_title = ge_("UN_PAM_EXTR_WRK_DESCR200")
     degree_info = get_degree_info(plan_title)
 
-    return {
+    plan_res = {
         "title": plan_title,
         **degree_info,  # degreeType and degree
         "year": year,
@@ -209,5 +212,13 @@ def get_plan(plan_code, year, campus):
         # Learning outcomes
         "learningOutcomes": gh_("win0div$ICField482"),
     }
-
+    try:
+        validate(
+            instance=plan_res,
+            schema=PLAN_SCHEMA,
+        )
+    except ValidationError as e:
+        print(f'JSON schema validation error for plan {plan_code} of campus {campus}, {year}:')
+        print(e)
+    return plan_res
     # https://github.com/EricWay1024/uCourse-crawler/blob/master/plan.js

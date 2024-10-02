@@ -186,7 +186,7 @@
                         },
                         "compensatable": {
                           "type": "string",
-                          "enum": ["Y", "N"],
+                          "enum": ["Y", "N", ""],
                           "description": "'Y' for compensatable, 'N' for non-compensatable."
                         },
                         "taught": {
