@@ -1,0 +1,205 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Module Object Schema",
+    "description": "A schema describing the structure of a module object with various properties.",
+    "type": "object",
+    "properties": {
+      "mycode": {
+        "type": "string",
+        "description": "The unique code for the module, in the format {school}_{index}_{year}_{campus}, where {year} and {campus} are as below, {school} is the code for the school offering the module (see the belongsTo field), and {index} stands for the index of the row in which the module appears on the search page based on {campus}, {year}, {school}. This code would be stable in a single scraping, but not in the long run."
+      },
+      "campus": {
+        "type": "string",
+        "enum": ["C", "M", "U"],
+        "description": "The campus where the module is offered. 'C' for China, 'M' for Malaysia, 'U' for United Kingdom."
+      },
+      "year": {
+        "type": "string",
+        "description": "The academic year of the module."
+      },
+      "code": {
+        "type": "string",
+        "description": "The code of the module."
+      },
+      "title": {
+        "type": "string",
+        "description": "The title of the module."
+      },
+      "credits": {
+        "type": "string",
+        "description": "The number of credits associated with the module, stored as a string."
+      },
+      "level": {
+        "type": "string",
+        "description": "The level of the module, stored as a string."
+      },
+      "summary": {
+        "type": "string",
+        "description": "A summary of the module (HTML content)."
+      },
+      "aims": {
+        "type": "string",
+        "description": "The aims of the module (HTML content)."
+      },
+      "offering": {
+        "type": "string",
+        "description": "The name of the school offering the module."
+      },
+      "convenor": {
+        "type": "string",
+        "description": "The name of the module convenor."
+      },
+      "semester": {
+        "type": "string",
+        "description": "The semester during which the module is taught."
+      },
+      "requisites": {
+        "type": "array",
+        "description": "A list of requisite modules for the module.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code of the requisite module."
+            },
+            "title": {
+              "type": "string",
+              "description": "The title of the requisite."
+            }
+          },
+          "required": ["code", "title"]
+        }
+      },
+      "additionalRequirements": {
+        "type": "array",
+        "description": "A list of additional requirements for the module.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "operator": {
+              "type": "string",
+              "description": "The operator for the requirement."
+            },
+            "condition": {
+              "type": "string",
+              "description": "The condition for the requirement."
+            }
+          },
+          "required": ["operator", "condition"]
+        }
+      },
+      "outcome": {
+        "type": "string",
+        "description": "The learning outcome of the module (HTML content)."
+      },
+      "targetStudents": {
+        "type": "string",
+        "description": "The target students for the module."
+      },
+      "assessmentPeriod": {
+        "type": "string",
+        "description": "The assessment period for the module."
+      },
+      "class": {
+        "type": "array",
+        "description": "A list of class details for the module.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "activity": {
+              "type": "string",
+              "description": "The type of activity (e.g., 'Lecture')."
+            },
+            "numOfWeeks": {
+              "type": "string",
+              "description": "The number of weeks the class runs, e.g. '10 weeks'."
+            },
+            "numOfSessions": {
+              "type": "string",
+              "description": "The number of sessions in total."
+            },
+            "sessionDuration": {
+              "type": "string",
+              "description": "The duration of each session."
+            }
+          },
+          "required": ["activity", "numOfWeeks", "numOfSessions", "sessionDuration"]
+        }
+      },
+      "assessment": {
+        "type": "array",
+        "description": "A list of assessments for the module.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "assessment": {
+              "type": "string",
+              "description": "The name of assessment, e.g. 'Exam 1'."
+            },
+            "weight": {
+              "type": "string",
+              "description": "The percentage weight of the assessment, stored as a string, e.g. '100.00'."
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of the assessment."
+            },
+            "duration": {
+              "type": "string",
+              "description": "The duration of the assessment."
+            },
+            "requirements": {
+              "type": "string",
+              "description": "Any specific requirements for the assessment."
+            }
+          },
+          "required": ["assessment", "weight", "type", "duration", "requirements"]
+        }
+      },
+      "belongsTo": {
+        "type": "object",
+        "description": "Information about the school to which the module belongs.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The code of the school."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the school."
+          },
+          "campus": {
+            "type": "string",
+            "enum": ["C", "M", "U"],
+            "description": "The campus where the school is located."
+          }
+        },
+        "required": ["code", "name", "campus"]
+      },
+      "corequisites": {
+        "type": "array",
+        "description": "A list of corequisite modules.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code of the corequisite."
+            },
+            "title": {
+              "type": "string",
+              "description": "The title of the corequisite."
+            }
+          },
+          "required": ["code", "title"]
+        }
+      },
+      "classComment": {
+        "type": "string",
+        "description": "Any additional comments about the class."
+      }
+    },
+    "required": ["mycode", "campus", "year", "code", "title", "credits", "level", "summary", "aims", "offering", "convenor", "semester", "belongsTo"]
+  }
+  

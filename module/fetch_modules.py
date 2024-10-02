@@ -8,10 +8,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from retry import retry
 from .util import get_mycode
 from .database import init_db, insert_module, module_exists
-from .config import THREADS, DRIVER_PATH, HEADLESS
+from .config import THREADS, DRIVER_PATH, HEADLESS, MODULE_SCHEMA
 import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 
 
 def wait_until_element(browser, id, timeout=10):
@@ -45,11 +46,11 @@ def get_module(browser, module_obj):
     rows[index].click()
     wait_until_element(browser, "UN_PLN_EXT2_WRK_ACAD_YEAR")
 
-    def ge(id, desired_type=str):
+    def ge(id):
         try:
-            return desired_type(browser.find_element(By.ID, id).text.strip())
-        except (NoSuchElementException, ValueError):
-            return "" if desired_type == str else float('nan')
+            return browser.find_element(By.ID, id).text.strip()
+        except NoSuchElementException:
+            return ""
 
     def gh(id):
         try:
@@ -74,14 +75,14 @@ def get_module(browser, module_obj):
 
         return rows_data
 
-    return {
+    module_res = {
         "mycode": mycode,
         "campus": campus,
         "year": ge("UN_PLN_EXT2_WRK_ACAD_YEAR"),
         "code": ge("UN_PLN_EXT2_WRK_SUBJECT_DESCR"),
         "title": ge("UN_PLN_EXT2_WRK_PTS_LIST_TITLE"),
-        "credits": ge("UN_PLN_EXT2_WRK_UNITS_MINIMUM", float),
-        "level": ge("UN_PLN_EXT2_WRK_UN_LEVEL", float),
+        "credits": ge("UN_PLN_EXT2_WRK_UNITS_MINIMUM"),
+        "level": ge("UN_PLN_EXT2_WRK_UN_LEVEL"),
         "summary": gh("win0divUN_PLN_EXT2_WRK_HTMLAREA11"),
         "aims": gh("win0divUN_PLN_EXT2_WRK_HTMLAREA12"),
         "offering": ge("UN_PLN_EXT2_WRK_DESCRFORMAL"),
@@ -89,26 +90,31 @@ def get_module(browser, module_obj):
         "semester": ge("UN_PLN_EXT2_WRK_UN_TRIGGER_NAMES"),
         "requisites": gt("win0divUN_PRECORQ9_TBL$grid$0", 
                          ["code", "title"]),
-                        #  {"Code": "subject", "Title": "courseTitle"}),
         "additionalRequirements": gt("win0divUN_ADD_REQ_CRSgridc-right$0", 
                                      ["operator", "condition"]),
-                                    #  {"Operator": "operator", "Condition": "condition"}),
         "outcome": gh("UN_PLN_EXT2_WRK_UN_LEARN_OUTCOME"),
         "targetStudents": ge("win0divUN_PLN_EXT2_WRK_HTMLAREA10"),
         "assessmentPeriod": ge("win0divUN_PLN_EXT2_WRK_UN_DESCRFORMAL"),
         "class": gt("win0divUN_PRCS_FRQ_VWgridc-right$0", 
                     ["activity", "numOfWeeks", "numOfSessions", "sessionDuration"]),
-                    # {"Course Component": "activity", "Number of weeks": "numOfWeeks", "Number of sessions": "numOfSessions", "Duration of a session": "sessionDuration"}),
         "assessment": gt("win0divUN_CRS_ASAI_TBL$grid$0", 
                          ["assessment", "weight", "type", "duration",  "requirements"]),
-                        #  {"Assessment": "assessment", "Weight": "weight", "Type": "type", "Duration": "duration", "Requirements": "requirements"}),
         "belongsTo": school_obj,
         "corequisites": gt("win0divUN_COCORQ9_TBLgridc$0", 
                            ["code", "title"]),
-                        #    {"Code": "subject", "Title": "courseTitle"}),
         "classComment": ge("win0divUN_PLN_EXT2_WRK_UN_ACTIVITY_INFO"),
     }
 
+    try:
+        validate(
+            instance=module_res,
+            schema=MODULE_SCHEMA,
+        )
+    except ValidationError as e:
+        print(f'JSON schema validation error for module {module_res["code"]} (mycode = {mycode}):')
+        print(e)
+
+    return module_res
 
 def init_browser():
     # Define Chrome options

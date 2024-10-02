@@ -2,71 +2,37 @@ from .config import DB_PATH
 import sqlite3
 import json
 from .util import get_mycode
-from .config import COURSE_TABLE_NAME
+from .config import COURSE_TABLE_NAME, MODULE_SCHEMA
+from plan.util import get_fields_from_schema
+
+text_fields, obj_fields, all_fields = get_fields_from_schema(MODULE_SCHEMA)
 
 def init_db():
+    make_table_script = (
+        f"CREATE TABLE IF NOT EXISTS {COURSE_TABLE_NAME} (\n" + 
+        ",\n".join([f"  {field} TEXT" for field in all_fields]) + 
+        ",\n  PRIMARY KEY (mycode)); "
+    )
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute(f'''
-    CREATE TABLE IF NOT EXISTS {COURSE_TABLE_NAME} (
-        mycode TEXT  PRIMARY KEY ,
-        code TEXT,
-        semester TEXT,
-        year TEXT,
-        campus TEXT,
-        title TEXT,
-        credits REAL,
-        level REAL,
-        summary TEXT,
-        aims TEXT,
-        offering TEXT,
-        convenor TEXT,
-        requisites TEXT,
-        additionalRequirements TEXT,
-        outcome TEXT,
-        targetStudents TEXT,
-        assessmentPeriod TEXT,
-        class TEXT,
-        assessment TEXT,
-        belongsTo TEXT,
-        corequisites TEXT,
-        classComment TEXT
-    )
-    ''')
+    cur.execute(make_table_script)
     conn.commit()
     return conn, cur
 
-
-
 # Function to insert a module into the database
 def insert_module(cursor, module):
-    cursor.execute(f'''
-    INSERT INTO {COURSE_TABLE_NAME} (
-        mycode, 
-        code, 
-        semester, year, campus,
-        title, credits, level, summary, aims, offering, convenor,
-        requisites, additionalRequirements, outcome, targetStudents, assessmentPeriod,
-         class, assessment, belongsTo, corequisites, classComment
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        module["mycode"],
-        module["code"], module["semester"], module["year"], 
-        module['campus'],
-        module["title"], 
-        module["credits"], module["level"],
-        module["summary"], module["aims"], module["offering"], module["convenor"],
-        json.dumps(module["requisites"]), 
-        json.dumps(module["additionalRequirements"]),
-        module["outcome"], 
-        module["targetStudents"], 
-        module["assessmentPeriod"], 
-        json.dumps(module["class"]), 
-        json.dumps(module["assessment"]), 
-        json.dumps(module["belongsTo"]),
-        json.dumps(module["corequisites"]), 
-        module["classComment"],
-    ))
+    # Prepare the insert query
+    insert_query = (
+        f'INSERT INTO {COURSE_TABLE_NAME} (' + 
+        ',\n'.join(all_fields) + 
+        ') VALUES (' + 
+        ', '.join(["?" for _ in all_fields]) + 
+        ')'
+    )
+    insert_tuple = tuple([module[field] for field in text_fields] + 
+                         [json.dumps(module[field]) for field in obj_fields])
+    # Insert the module data into the database
+    cursor.execute(insert_query, insert_tuple)
 
 
 def module_exists(cursor, module_obj):
