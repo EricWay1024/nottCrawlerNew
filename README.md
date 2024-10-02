@@ -30,9 +30,9 @@ TODO:
 - [x] Refactor the `module` module
 - [ ] Make `module` more stable ~~(currently have to run a lot of times)~~ (It seems beter now, but needs further test)
 - A blog post on how on developed these
-- **Output Data Specification**
+- [x] **Output Data Specification**
 - Rewrite this README
-- Conform to flake8
+- [x] Conform to flake8
 
 The output data format has changed so nott-course also changed a bit.
 

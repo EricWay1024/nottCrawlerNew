@@ -2,7 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, InvalidSessionIdException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    InvalidSessionIdException,
+)
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from retry import retry
@@ -17,9 +20,7 @@ from jsonschema.exceptions import ValidationError
 
 def wait_until_element(browser, id, timeout=10):
     wait = WebDriverWait(browser, timeout)
-    wait.until(
-        EC.presence_of_element_located((By.ID, id))
-    )
+    wait.until(EC.presence_of_element_located((By.ID, id)))
 
 
 @retry(tries=5)
@@ -42,7 +43,7 @@ def get_module(browser, module_obj):
     )
 
     wait_until_element(browser, "win0divUN_PCRSE_TBLgridc$0")
-    rows = browser.find_elements(By.CLASS_NAME, 'ps_grid-row')
+    rows = browser.find_elements(By.CLASS_NAME, "ps_grid-row")
     rows[index].click()
     wait_until_element(browser, "UN_PLN_EXT2_WRK_ACAD_YEAR")
 
@@ -54,7 +55,7 @@ def get_module(browser, module_obj):
 
     def gh(id):
         try:
-            return browser.find_element(By.ID, id).get_attribute('innerHTML')
+            return browser.find_element(By.ID, id).get_attribute("innerHTML")
         except NoSuchElementException:
             return ""
 
@@ -68,7 +69,9 @@ def get_module(browser, module_obj):
 
         for row in table_element.find_elements(By.CSS_SELECTOR, "tbody tr"):
             row_data = {}
-            cells = row.find_elements(By.CSS_SELECTOR, 'td:not(.ptgrid-rownumber)')
+            cells = row.find_elements(
+                By.CSS_SELECTOR, "td:not(.ptgrid-rownumber)"
+            )
             for header, cell in zip(headers, cells):
                 row_data[header] = cell.text.strip()
             rows_data.append(row_data)
@@ -88,20 +91,23 @@ def get_module(browser, module_obj):
         "offering": ge("UN_PLN_EXT2_WRK_DESCRFORMAL"),
         "convenor": ge("UN_PLN_EXT2_WRK_NAME_DISPLAYS_AS"),
         "semester": ge("UN_PLN_EXT2_WRK_UN_TRIGGER_NAMES"),
-        "requisites": gt("win0divUN_PRECORQ9_TBL$grid$0", 
-                         ["code", "title"]),
-        "additionalRequirements": gt("win0divUN_ADD_REQ_CRSgridc-right$0", 
-                                     ["operator", "condition"]),
+        "requisites": gt("win0divUN_PRECORQ9_TBL$grid$0", ["code", "title"]),
+        "additionalRequirements": gt(
+            "win0divUN_ADD_REQ_CRSgridc-right$0", ["operator", "condition"]
+        ),
         "outcome": gh("UN_PLN_EXT2_WRK_UN_LEARN_OUTCOME"),
         "targetStudents": ge("win0divUN_PLN_EXT2_WRK_HTMLAREA10"),
         "assessmentPeriod": ge("win0divUN_PLN_EXT2_WRK_UN_DESCRFORMAL"),
-        "class": gt("win0divUN_PRCS_FRQ_VWgridc-right$0", 
-                    ["activity", "numOfWeeks", "numOfSessions", "sessionDuration"]),
-        "assessment": gt("win0divUN_CRS_ASAI_TBL$grid$0", 
-                         ["assessment", "weight", "type", "duration",  "requirements"]),
+        "class": gt(
+            "win0divUN_PRCS_FRQ_VWgridc-right$0",
+            ["activity", "numOfWeeks", "numOfSessions", "sessionDuration"],
+        ),
+        "assessment": gt(
+            "win0divUN_CRS_ASAI_TBL$grid$0",
+            ["assessment", "weight", "type", "duration", "requirements"],
+        ),
         "belongsTo": school_obj,
-        "corequisites": gt("win0divUN_COCORQ9_TBLgridc$0", 
-                           ["code", "title"]),
+        "corequisites": gt("win0divUN_COCORQ9_TBLgridc$0", ["code", "title"]),
         "classComment": ge("win0divUN_PLN_EXT2_WRK_UN_ACTIVITY_INFO"),
     }
 
@@ -111,10 +117,14 @@ def get_module(browser, module_obj):
             schema=MODULE_SCHEMA,
         )
     except ValidationError as e:
-        print(f'JSON schema validation error for module {module_res["code"]} (mycode = {mycode}):')
+        print(
+            "JSON schema validation error for module "
+            f'{module_res["code"]} (mycode = {mycode}):'
+        )
         print(e)
 
     return module_res
+
 
 def init_browser():
     # Define Chrome options
@@ -135,40 +145,56 @@ def fetch_modules_in_thread(modules_list, fetched_count, total_count):
     conn, cursor = init_db()  # Initialize the database connection
     for module_obj in modules_list:
         if module_exists(cursor, module_obj):
-            fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
-            print(f"Fetched {fetched_count[0]}/{total_count} modules", end='\r')
+            # Using a mutable object (list) to keep track across threads
+            fetched_count[0] += 1
+            print(
+                f"Fetched {fetched_count[0]}/{total_count} modules", end="\r"
+            )
             continue
         try:
             module = get_module(driver, module_obj)
-        except InvalidSessionIdException:  # If the brwoser died for some reason
+        except InvalidSessionIdException:
+            # If the brwoser died for some reason
             driver = init_browser()
             module = get_module(driver, module_obj)
 
         insert_module(cursor, module)  # Insert module into SQLite
         conn.commit()  # Save all changes to the database
         # Increment fetched count and print progress
-        fetched_count[0] += 1  # Using a mutable object (list) to keep track across threads
-        print(f"Fetched {fetched_count[0]}/{total_count} modules", end='\r')
+        # Using a mutable object (list) to keep track across threads
+        fetched_count[0] += 1
+        print(f"Fetched {fetched_count[0]}/{total_count} modules", end="\r")
     driver.quit()
     conn.commit()  # Save all changes to the database
     conn.close()  # Close the database connection
 
+
 # Main execution function
+
+
 def run_fetch(modules_list):
     total_count = len(modules_list)  # Get the total number of modules to fetch
     fetched_count = [0]  # Use a list to keep track of fetched modules
 
-    # This is because we want the number of modules already fetched to be roughly
-    # the same in each thread:
+    # This is because we want the number of modules already fetched to be
+    # roughly the same in each thread:
     random.shuffle(modules_list)
 
     modules_per_thread = total_count // THREADS + 1
-    modules_split = [modules_list[i:i + modules_per_thread] for i in range(0, total_count, modules_per_thread)]
+    modules_split = [
+        modules_list[i : i + modules_per_thread]
+        for i in range(0, total_count, modules_per_thread)
+    ]
 
     errors_occured = False
     with ThreadPoolExecutor(max_workers=THREADS) as executor:
         future_to_thread = {
-            executor.submit(fetch_modules_in_thread, module_chunk, fetched_count, total_count): idx
+            executor.submit(
+                fetch_modules_in_thread,
+                module_chunk,
+                fetched_count,
+                total_count,
+            ): idx
             for idx, module_chunk in enumerate(modules_split)
         }
 
@@ -181,11 +207,10 @@ def run_fetch(modules_list):
             except Exception as e:
                 print(f"An error occurred in thread {thread_index}: {e}")
                 errors_occured = True
-    
+
     fetched_count = [0]
     if errors_occured:
         # Do the rest in single thread... maybe
         fetch_modules_in_thread(modules_list, fetched_count, total_count)
 
     print("\nAll modules have been fetched and saved to the database.")
-
