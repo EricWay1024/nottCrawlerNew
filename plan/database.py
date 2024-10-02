@@ -23,12 +23,10 @@ def insert_plan(cursor, plan_data):
         ', '.join(["?" for _ in all_fields]) + 
         ')'
     )
-
-    # Insert the plan data into the database
-    cursor.execute(insert_query, 
-                   tuple([plan_data[field] for field in text_fields] + 
+    insert_tuple = tuple([plan_data[field] for field in text_fields] + 
                          [json.dumps(plan_data[field]) for field in obj_fields])
-    )
+    # Insert the plan data into the database
+    cursor.execute(insert_query, insert_tuple)
 
 
 # Create the SQLite table
