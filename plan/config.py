@@ -1,10 +1,10 @@
 import json
 
-YEAR = '2024'
-PLAN_BRIEF_PATH = './res/plan_brief.json'
-DB_PATH = './res/data.db'
-PLAN_TABLE_NAME = 'plan'
-PLAN_SCHEMA_PATH = './schemas/plan-schema.json'
+YEAR = "2024"
+PLAN_BRIEF_PATH = "./res/plan_brief.json"
+DB_PATH = "./res/data.db"
+PLAN_TABLE_NAME = "plan"
+PLAN_SCHEMA_PATH = "./schemas/plan-schema.json"
 PLAN_SCHEMA = json.load(open(PLAN_SCHEMA_PATH))
 
 # This is a list, not a string! Look at the end
@@ -60,4 +60,6 @@ No Qualification
 Post Graduate Certificate in Education
 Postgraduate Certificate
 Postgraduate Diploma
-Professional Doctorate in Forensic Psychology""".split("\n")
+Professional Doctorate in Forensic Psychology""".split(
+    "\n"
+)

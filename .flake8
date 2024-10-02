@@ -1,2 +1,0 @@
-[flake8]
-max-line-length = 120  # Set the max line length you prefer, or remove the limit
