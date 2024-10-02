@@ -1,51 +1,69 @@
 # New (as of October 2024) Crawler for University of Nottingham Course Catalogue
 
-[Data source](https://campus.nottingham.ac.uk/psp/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PAM_CRSE_EXTRCT.GBL).
-
-The catalogue has undergone some big changes this year but it's still far less good than [Nott Course](https://nott-course.uk) so the crawler is here.
-
+Our data source is [the UoN Course Catalogue](https://campus.nottingham.ac.uk/psp/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PAM_CRSE_EXTRCT.GBL).
+The catalogue has undergone some big changes this year, but it's still far less good than [Nott Course](https://nott-course.uk) and people are asking me to update the data, so the crawler is here.
 I personally prefer Python so I ditched [the old JS crawler](https://github.com/EricWay1024/uCourse-crawler/) and rewrote everything.
 
-To run (you may want a `venv` environment):
+
+## Overview
+
+This crawler has two parts: one for the (course) modules and one for the academic plans and they are written as two (Python) modules, `module` and `plan`.
+The `module` module requires Selenium, requests and BeautifulSoup whereas the `plan` module only relies on the latter two.
+
+An overview of the work flow:
+
+- When you run the `module` module, it will first obtain a list of schools of the three campuses and store it in a JSON file. Then it will obtain a list of modules of each school (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT2_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH&LINKA=&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH)). These pieces of 'module brief' are then stored in another JSON file. Finally, it will launch some Selenium-controlled browsers (headless or otherwise) to fetch the details of each module (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT4_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=Game%20Theory&MODULE=MATH3004&CRSEID=004662&LINKA=&LINKB=&LINKC=USC-MATH)) based on the module brief, and store the data in a SQLite database, where each column is TEXT -- for dictionaries or lists, they are `json.dumps`-ed into a string.
+- When you run the `plan` module, it will first obtain a list of academic plans for each campus, and store these pieces of 'plan brief' in a JSON file. Then it will fetch the detail of each plan (not using Selenium this time, so faster), and again store the data in a SQLite database.
+
+Check `schemas` for the JSON schemas of the plan and module objects stored in the SQLite database.
+
+## Features
+- Concurrency!!!
+- Resumable download!!!
+
+## Get Started!
+
+First you need a `venv` environment which I assume you know how to set up.
+Then you also need to make sure Chrome or Chromium is installed on your machine, [download a Chrome webdriver](https://googlechromelabs.github.io/chrome-for-testing/) for Selenium based on your operating system and then modify the `DRIVER_PATH` variable in `module/config.py`. Also modify other variables in `module/config.py` and `plan/config.py` if that is what you need.
 ```
 pip install -r requirements.txt
 mkdir res
 python -m plan.main
-python -m module.fetch_brief
-python -m module.fetch_modules
+python -m module.main
 ```
-Oh, you also need to set up the Chrome webdriver for Selenium... I hope you know how to do it.
 
-Current features:
-- Concurrency!!
-- Resumable download!!!
+If anything went wrong in the process of crawling, you can always just restart the script and it will resume downloading by skipping what has been fetched in the database. Then you should produce a `data.db` file in the `res` directory (if you didn't change the relevant `config` fields), which is used by the [backend server](https://github.com/EricWay1024/nott-course-server-cpp).
 
-Technical notes:
+<!-- Technical notes:
 - `plan` only relies on `requests` + `beautifulsoup4`.
-- `module` needs `selenium` in addition, because it wasn't clear to me how to obtain a `CRSEID` field in the request. So it's a bit slow.
+- `module` needs `selenium` in addition, because it wasn't clear to me how to obtain a `CRSEID` field in the request. So it's a bit slow. -->
 
 
-TODO:
+## To-dos
 
 - [x] Refactor the `module` module
-- [ ] Make `module` more stable ~~(currently have to run a lot of times)~~ (It seems beter now, but needs further test)
-- A blog post on how on developed these
+- [x] Make `module` more stable ~~(currently have to run a lot of times)~~ (It seems beter now, but may need further test)
 - [x] **Output Data Specification**
-- Rewrite this README
+- [x] Rewrite this README
 - [x] Conform to flake8
+- [ ] A blog post on how I developed these
 
 The output data format has changed so nott-course also changed a bit.
 
----
+## Important note
 
-Note: campus should always be a single letter in ['C', 'M', 'U']!!!
+`campus` should always be a single letter in ['C', 'M', 'U'], not the full name!!!
+
+## Change of output fields compared to the [previous crawler](https://github.com/EricWay1024/uCourse-crawler/)
+
+**You don't need to read this section now.**
 
 Change of course fields:
 - Add corequisites
 - Add classComment
 - courseWebLinks has disappeared (it was useless anyway)
 - Add duration to assessments
-- In requisites and corequisites, ["code", "title"] has replaced  {"Code": "subject", "Title": "courseTitle"}
+- In requisites and corequisites, ["code", "title"] has replaced "subject", "courseTitle"
 - Convenor is now a string (name of the person), not an object
 
 
@@ -57,12 +75,11 @@ Change of plan fields:
 - school has become a string too
 - the only object field is now modules
 - academicLoad has disappeared
-- added year and campus
 - No furtherInformation
-- No notwithstandingRegulations
-- add additionalRegulations
-- remove "overview"
-        "assessmentMethods"
-        "teachingAndLearning" => everything in learning outcomes
+- notwithstandingRegulations changing to additionalRegulations
+- added year and campus
+- remove "overview", "assessmentMethods", "teachingAndLearning" => everything in learning outcomes
+
+## Acknowledgements
 
 Finally, a big thanks to... ChatGPT for helping me write this project.
