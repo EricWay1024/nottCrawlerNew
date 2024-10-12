@@ -177,7 +177,7 @@ def get_module_details(school, campus, school_name, fetched_count):
     def get_response():
         return session.get(f'https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT2_FPG&CAMPUS={campus}&TYPE=Module&YEAR={YEAR}&TITLE=&Module=&SCHOOL={school}&LINKA=', headers=headers)
     
-    response = get_response
+    response = get_response()
 
     soup = BeautifulSoup(response.text, "html.parser")
     element = soup.find(id="ICSID")
