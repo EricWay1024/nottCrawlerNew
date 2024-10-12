@@ -1,7 +1,8 @@
 from .fetch_brief import get_all_schools, get_all_modules
 from .config import SCHOOLS_PATH, MODULE_BRIEF_PATH
 from .fetch_modules import run_fetch
-from .util import load_or_fetch, filter_modules
+from common import load_or_fetch
+from .util import filter_modules
 
 if __name__ == "__main__":
     print("Loading or fetching the list of schools...")

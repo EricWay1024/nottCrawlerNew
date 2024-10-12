@@ -6,3 +6,4 @@ __pycache__
 backup/
 res/
 !schemas/*
+module_old
