@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from re import compile as rc
-import re
 from retry import retry
 from .util import get_degree_info
 from jsonschema import validate
 from .config import PLAN_SCHEMA
 from jsonschema.exceptions import ValidationError
+from common import ge, gh, gt
 
 
 def get_all_plans(campus, year):
@@ -63,43 +63,6 @@ def get_all_plans(campus, year):
         plan_info_list.append(plan_info)
 
     return plan_info_list
-
-
-def replace_spaces(text):
-    # This regex will match one or more consecutive whitespace characters (including newlines)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-# Get text or number from element with id
-def ge(soup, id, desired_type=str):
-    try:
-        element = soup.find(id=id)
-        return desired_type(replace_spaces(element.get_text(strip=True)))
-    except (AttributeError, ValueError):
-        return "" if desired_type == str else float("nan")
-
-
-# Get HTML from element with id
-def gh(soup, id):
-    try:
-        element = soup.find(id=id)
-        return replace_spaces(element.decode_contents()) if element else ""
-    except AttributeError:
-        return ""
-
-
-# Get a table from element with id
-def gt(soup, headers):
-    rows_data = []
-    # Find all rows in the table (assuming they are in the <tbody> under <tr>)
-    for row in soup.select("tbody tr"):
-        row_data = {}
-        # Find all cells in the row that are not row number cells
-        cells = row.find_all("td")
-        for header, cell in zip(headers, cells):
-            row_data[header] = replace_spaces(cell.get_text(strip=True))
-        rows_data.append(row_data)
-    return rows_data
 
 
 def parse_modules(soup):
