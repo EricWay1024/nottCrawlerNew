@@ -1,5 +1,3 @@
-import json
-
 
 def get_mycode(module_obj):
     campus = module_obj["campus"]
@@ -8,15 +6,6 @@ def get_mycode(module_obj):
     index = module_obj["index"]
     mycode = f"{school}_{index}_{year}_{campus}"
     return mycode
-
-
-def load_or_fetch(json_path, fetch_func):
-    try:
-        res = json.load(open(json_path))
-    except FileNotFoundError:
-        res = fetch_func()
-        json.dump(res, open(json_path, "w"))
-    return res
 
 
 def filter_modules(modules_list):

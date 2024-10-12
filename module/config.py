@@ -12,6 +12,7 @@ HEADLESS = True  # Set to False for testing
 # Define the path to chromedriver.exe
 DRIVER_PATH = "C:\\Users\\eric\\apps\\chromedriver.exe"
 # For Testing, we only run it for the Malaysia campus
-TESTING = True
+TESTING = False
 MODULE_SCHEMA_PATH = "./schemas/module-schema.json"
 MODULE_SCHEMA = json.load(open(MODULE_SCHEMA_PATH))
+RETRY_NUM = 6
