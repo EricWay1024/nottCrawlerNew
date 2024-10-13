@@ -192,17 +192,13 @@ def get_plan(plan_code, year, campus):
         # Assessment
         "assessment": gh_("win0divUN_PAM_EXTR_WRK_DESCRLONG$319$"),
         "assessmentMarking": gh_("win0div$ICField479grp"),
-        "progressionInformation": gh_(
-            "UN_PPLN_DTL_TBL_UN_ASSMNT_PROG_REG$76$"
-        ),
+        "progressionInformation": gh_("UN_PPLN_DTL_TBL_UN_ASSMNT_PROG_REG$76$"),
         "borderlineCriteria": gh_("UN_PPLN_DTL_TBL_UN_BRDR_LN_DESCR$327$"),
         "degreeInformation": gh_("UN_PPLN_DTL_TBL_UN_ASSES_AWARD_REG$273$"),
         "courseWeightings": ge_("UN_PLN_EXT2_WRK_DESCR100A$435$"),
         "degreeCalculationModel": ge_("UN_PLN_EXT2_WRK_DESCRLONG"),
         "otherRegulations": gh_("UN_PPLN_DTL_TBL_UN_OTHER_REGULATN"),
-        "additionalRegulations": gh_(
-            "UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"
-        ),
+        "additionalRegulations": gh_("UN_PPLN_DTL_TBL_UN_STANDNG_REGULTN$328$"),
         # Learning outcomes
         "learningOutcomes": gh_("win0div$ICField482"),
     }
