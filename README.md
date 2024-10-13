@@ -7,7 +7,7 @@ I personally prefer Python so I ditched [the old JS crawler](https://github.com/
 ## Acknowledgements
 
 A big thanks to... 
-- my friend [Lucien](https://github.com/lucienshawls) for helping with the reimagined, Selenium-free `module` crawler (see [issue #1](#1));
+- my friend [Lucien](https://github.com/lucienshawls) for helping with the reimagined, Selenium-free `module` crawler (see [issue #1](https://github.com/EricWay1024/nottCrawlerNew/issues/1));
 - and ChatGPT for making things easier.
 
 
@@ -18,7 +18,7 @@ The `module` module requires Selenium, requests and BeautifulSoup whereas the `p
 
 An overview of the work flow:
 
-- When you run the `module` module, it will first obtain a list of schools of the three campuses and store it in a JSON file. Then it will obtain a list of modules of each school (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT2_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH&LINKA=&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH)). Then a POST request (with session information) is sent to fetch the link for the page of each module (see [issue #1](#1) for details), and then a GET request  to fetch the module details (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT4_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=Game%20Theory&MODULE=MATH3004&CRSEID=004662&LINKA=&LINKB=&LINKC=USC-MATH)). We store the data in a SQLite database, where each column is TEXT -- for dictionaries or lists, they are `json.dumps`-ed into a string.
+- When you run the `module` module, it will first obtain a list of schools of the three campuses and store it in a JSON file. Then it will obtain a list of modules of each school (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT2_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH&LINKA=&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=&Module=&SCHOOL=USC-MATH)). Then a POST request (with session information) is sent to fetch the link for the page of each module (see [issue #1](https://github.com/EricWay1024/nottCrawlerNew/issues/1) for details), and then a GET request  to fetch the module details (like the information you see [here](https://campus.nottingham.ac.uk/psc/csprd_pub/EMPLOYEE/HRMS/c/UN_PROG_AND_MOD_EXTRACT.UN_PLN_EXTRT_FL_CP.GBL?PAGE=UN_CRS_EXT4_FPG&CAMPUS=U&TYPE=Module&YEAR=2024&TITLE=Game%20Theory&MODULE=MATH3004&CRSEID=004662&LINKA=&LINKB=&LINKC=USC-MATH)). We store the data in a SQLite database, where each column is TEXT -- for dictionaries or lists, they are `json.dumps`-ed into a string.
 - When you run the `plan` module, it will first obtain a list of academic plans for each campus, and store these pieces of 'plan brief' in a JSON file. Then it will fetch the detail of each plan (not using Selenium this time, so faster), and again store the data in a SQLite database.
 
 Check `schemas` for the JSON schemas of the plan and module objects stored in the SQLite database.
