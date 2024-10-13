@@ -8,6 +8,10 @@
         "type": "string",
         "description": "The unique code for the module, in the format {school}_{index}_{year}_{campus}, where {year} and {campus} are as below, {school} is the code for the school offering the module (see the belongsTo field), and {index} stands for the index of the row in which the module appears on the search page based on {campus}, {year}, {school}. This code would be stable in a single scraping, but not in the long run."
       },
+      "courseId": {
+        "type": "string",
+        "description": "CRSEID in the link"
+      },
       "campus": {
         "type": "string",
         "enum": ["C", "M", "U"],
