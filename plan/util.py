@@ -36,4 +36,3 @@ def get_degree_info(plan_title):
         print(f'"{title}" has unknown degree.')
 
     return {"degreeType": plan_degree_type, "degree": plan_degree}
-

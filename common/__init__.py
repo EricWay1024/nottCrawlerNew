@@ -1,6 +1,7 @@
 import re
 import json
 
+
 def load_or_fetch(json_path, fetch_func):
     try:
         res = json.load(open(json_path))
@@ -8,6 +9,7 @@ def load_or_fetch(json_path, fetch_func):
         res = fetch_func()
         json.dump(res, open(json_path, "w"))
     return res
+
 
 def get_fields_from_schema(schema):
     text_fields = []
@@ -23,6 +25,7 @@ def get_fields_from_schema(schema):
             )
     all_fields = text_fields + obj_fields
     return text_fields, obj_fields, all_fields
+
 
 def replace_spaces(text):
     # This regex will match one or more consecutive whitespace characters (including newlines)
@@ -57,5 +60,10 @@ def gt(soup, headers):
         cells = row.find_all("td")
         for header, cell in zip(headers, cells):
             row_data[header] = replace_spaces(cell.get_text(strip=True))
+
+        # Force the data to conform to the format
+        for header in headers:
+            if header not in row_data:
+                row_data[header] = ""
         rows_data.append(row_data)
     return rows_data

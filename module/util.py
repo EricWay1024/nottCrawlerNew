@@ -1,4 +1,3 @@
-
 def get_mycode(module_obj):
     campus = module_obj["campus"]
     year = module_obj["year"]
