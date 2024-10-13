@@ -4,6 +4,12 @@ Our data source is [the UoN Course Catalogue](https://campus.nottingham.ac.uk/ps
 The catalogue has undergone some big changes this year, but it's still far less good than [Nott Course](https://nott-course.uk) and people are asking me to update the data, so the crawler is here.
 I personally prefer Python so I ditched [the old JS crawler](https://github.com/EricWay1024/uCourse-crawler/) and rewrote everything.
 
+## Acknowledgements
+
+A big thanks to... 
+- my friend [Lucien](https://github.com/lucienshawls) for helping with the reimagined, Selenium-free `module` crawler (see [issue #1](#1));
+- and ChatGPT for making things easier.
+
 
 ## Overview
 
@@ -79,9 +85,3 @@ Change of plan fields:
 - notwithstandingRegulations changing to additionalRegulations
 - added year and campus
 - remove "overview", "assessmentMethods", "teachingAndLearning" => everything in learning outcomes
-
-## Acknowledgements
-
-Finally, a big thanks to... 
-- my friend [Lucien](https://github.com/lucienshawls) for helping with the reimagined, Selenium-free `module` crawler;
-- and ChatGPT for making things easier.
