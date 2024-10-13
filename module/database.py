@@ -3,7 +3,7 @@ import sqlite3
 import json
 from .util import get_mycode
 from .config import COURSE_TABLE_NAME, MODULE_SCHEMA
-from plan.util import get_fields_from_schema
+from common import get_fields_from_schema
 
 text_fields, obj_fields, all_fields = get_fields_from_schema(MODULE_SCHEMA)
 

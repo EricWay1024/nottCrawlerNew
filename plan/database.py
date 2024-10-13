@@ -1,7 +1,7 @@
 import sqlite3
 import json
 from .config import DB_PATH, PLAN_TABLE_NAME, PLAN_SCHEMA
-from .util import get_fields_from_schema
+from common import get_fields_from_schema
 
 
 text_fields, obj_fields, all_fields = get_fields_from_schema(PLAN_SCHEMA)

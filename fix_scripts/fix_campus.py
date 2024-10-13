@@ -1,7 +1,8 @@
 import sqlite3
 
 # Database path (adjust this if necessary)
-DB_PATH = './res/data.db'
+DB_PATH = "./res/data.db"
+
 
 # Step 1: Update the 'campus' column in the `plan` table to use only the first letter of the current value
 def update_plan_campus():
@@ -14,6 +15,7 @@ def update_plan_campus():
     conn.commit()
     conn.close()
     print("Updated 'campus' column in 'plan' table.")
+
 
 # Step 2: Add the 'campus' column to the `course` table and set it based on the last character of 'mycode'
 def update_course_campus():
@@ -34,6 +36,7 @@ def update_course_campus():
     conn.close()
     print("Updated 'campus' column in 'course' table based on 'mycode'.")
 
+
 def main():
     # Step 1: Update the campus field in the plan table
     update_plan_campus()
@@ -42,6 +45,7 @@ def main():
     update_course_campus()
 
     print("Database updates completed successfully.")
+
 
 if __name__ == "__main__":
     main()
