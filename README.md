@@ -40,6 +40,11 @@ python -m module.main
 
 If anything went wrong in the process of crawling, you can always just restart the script and it will resume downloading by skipping what has been fetched in the database. Then you should produce a `data.db` file in the `res` directory (if you didn't change the relevant `config` fields), which is used by the [backend server](https://github.com/EricWay1024/nott-course-server-cpp).
 
+## Tips
+
+- If you see `No link found in [Module Code], pass...` whilst running `python -m module.main`, you can try rerun the command after it finishes.
+- There are roughly 6000 modules to fetch in total.
+
 <!-- Technical notes:
 - `plan` only relies on `requests` + `beautifulsoup4`.
 - `module` needs `selenium` in addition, because it wasn't clear to me how to obtain a `CRSEID` field in the request. So it's a bit slow. -->
