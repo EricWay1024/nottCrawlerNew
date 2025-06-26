@@ -10,6 +10,10 @@ A big thanks to...
 - my friend [Lucien](https://github.com/lucienshawls) for helping with the reimagined, Selenium-free `module` crawler (see [issue #1](https://github.com/EricWay1024/nottCrawlerNew/issues/1));
 - and ChatGPT for making things easier.
 
+## I just want the data!
+
+Either you can use [Nott Course](https://nott-course.uk) which is a beautiful interface for the data; or if you wish to do anything geeky, you can go to [Releases](https://github.com/EricWay1024/nottCrawlerNew/releases) and download the latest data as a SQLite database file. 
+
 
 ## Overview
 
