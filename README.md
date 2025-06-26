@@ -14,7 +14,6 @@ A big thanks to...
 ## Overview
 
 This crawler has two parts: one for the (course) modules and one for the academic plans and they are written as two (Python) modules, `module` and `plan`.
-The `module` module requires Selenium, requests and BeautifulSoup whereas the `plan` module only relies on the latter two.
 
 An overview of the work flow:
 
@@ -44,10 +43,6 @@ If anything went wrong in the process of crawling, you can always just restart t
 
 - If you see `No link found in [Module Code], pass...` whilst running `python -m module.main`, you can try rerun the command after it finishes.
 - There are roughly 6000 modules to fetch in total.
-
-<!-- Technical notes:
-- `plan` only relies on `requests` + `beautifulsoup4`.
-- `module` needs `selenium` in addition, because it wasn't clear to me how to obtain a `CRSEID` field in the request. So it's a bit slow. -->
 
 
 ## To-dos
