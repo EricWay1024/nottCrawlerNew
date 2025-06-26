@@ -1,6 +1,6 @@
 import json
 
-YEAR = "2024"
+YEAR = "2025"
 SCHOOLS_PATH = "./res/schools.json"
 MODULE_BRIEF_PATH = "./res/module_brief.json"
 DB_PATH = "./res/data.db"
