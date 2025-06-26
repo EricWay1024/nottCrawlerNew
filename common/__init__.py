@@ -58,6 +58,10 @@ def gt(soup, headers):
         row_data = {}
         # Find all cells in the row that are not row number cells
         cells = row.find_all("td")
+        cells = [
+            td for td in cells
+            if "ptgrid-rownumber" not in td.get("class", [])
+        ]
         for header, cell in zip(headers, cells):
             row_data[header] = replace_spaces(cell.get_text(strip=True))
 

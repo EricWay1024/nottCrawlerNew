@@ -139,6 +139,12 @@ def parse_module_page(link, campus, school_code, school_name, mycode):
         if id_soup is None:
             return []
         return gt(id_soup, headers)
+    
+    def clean_number_str(num_str: str) -> str:
+        # If there’s a decimal point, strip trailing zeros...
+        if "." in num_str:
+            num_str = num_str.rstrip("0").rstrip(".")
+        return num_str
 
     module_res = {
         "mycode": mycode,
@@ -147,7 +153,7 @@ def parse_module_page(link, campus, school_code, school_name, mycode):
         "year": ge_("UN_PLN_EXT2_WRK_ACAD_YEAR"),
         "code": ge_("UN_PLN_EXT2_WRK_SUBJECT_DESCR"),
         "title": ge_("UN_PLN_EXT2_WRK_PTS_LIST_TITLE"),
-        "credits": ge_("UN_PLN_EXT2_WRK_UNITS_MINIMUM"),
+        "credits": clean_number_str(ge_("UN_PLN_EXT2_WRK_UNITS_MINIMUM")),
         "level": ge_("UN_PLN_EXT2_WRK_UN_LEVEL"),
         "summary": gh_("win0divUN_PLN_EXT2_WRK_HTMLAREA11"),
         "aims": gh_("win0divUN_PLN_EXT2_WRK_HTMLAREA12"),
